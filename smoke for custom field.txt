@@ -1,0 +1,316 @@
+﻿
+#############################################
+DROP TABLE IF EXISTS smoke_test_report_for_template ;
+CREATE TABLE smoke_test_report_for_template  (stepId INT PRIMARY KEY auto_increment, errorCount int , errorMsg TEXT, passFlag VARCHAR(10),sqlStatement TEXT);
+
+ALTER TABLE z_newcreate_template_custom_field add index (linkingId,linkingIdSourceTable,linkingIdSeq,fieldDisplayName,fieldDisplayType,fieldGroupName);
+
+##############################################################
+#-3)parentType 不是默认值或者没填
+  INSERT INTO smoke_test_report_for_template (errorMsg,passFlag,errorCount,sqlStatement)
+SELECT 'parentType can not identify or blank',IF(COUNT(*)>0,'Fail','Pass') result,COUNT(*) number,'SELECT * FROM z_newcreate_template_custom_field z1 where parentType is null or parentType not in (''account_custom_data'',''contact_activity_custom_data'',''user_custom_data'',''company_custom_data'',''membership_listing_custom_data'',''event_registration_custom_data'',''event_attendee_custom_data'',''donation_custom_data'',''product_custom_data'',''store purchase'')'
+FROM z_newcreate_template_custom_field z1 where parentType is null or parentType not in ('account_custom_data','contact_activity_custom_data','user_custom_data','company_custom_data','membership_listing_custom_data','event_registration_custom_data','event_attendee_custom_data','donation_custom_data','product_custom_data','store purchase');
+
+
+
+#-2) fieldDisplayType 不是默认值或者没填
+INSERT INTO smoke_test_report_for_template (errorMsg,passFlag,errorCount,sqlStatement)
+SELECT 'fieldDisplayType can not identify or blank',IF(COUNT(*)>0,'Fail','Pass') result,COUNT(*) number,'SELECT * FROM z_newcreate_template_custom_field z1 where fieldDisplayType is null or fieldDisplayType not in (''O'',''M'',''D'',''R'',''C'')'
+FROM z_newcreate_template_custom_field z1 where fieldDisplayType is null or fieldDisplayType not in ('O','M','D','R','C');
+
+#-1) parseDelimiter 有值但是 fieldDisplayType<>'c'
+INSERT INTO smoke_test_report_for_template (errorMsg,passFlag,errorCount,sqlStatement)
+SELECT 'parseDelimiter is populated but fieldDisplayType is not check',IF(COUNT(*)>0,'Fail','Pass') result,COUNT(*) number,'SELECT * FROM z_newcreate_template_custom_field z1 where fieldDisplayType<>''C'' and LENGTH(TRIM(parseDelimiter))>0'
+FROM z_newcreate_template_custom_field z1 where fieldDisplayType<>'C' and LENGTH(TRIM(parseDelimiter))>0;
+
+
+
+#0) customFieldData 里面没有 填的 分隔符 parseDelimiter
+
+INSERT INTO smoke_test_report_for_template (errorMsg,passFlag,errorCount,sqlStatement)
+SELECT 'parseDelimiter may be error',IF(COUNT(*)>0,'warning','Pass') result,COUNT(*) number,'SELECT * FROM z_newcreate_template_custom_field z1 where fieldDisplayType=''C''  and length(trim(parseDelimiter))>0 GROUP BY fieldDisplayType,fieldGroupName,fieldDisplayName,parentType HAVING max(INSTR(customFieldData,parseDelimiter))=0'
+from  (SELECT * FROM z_newcreate_template_custom_field z1 where fieldDisplayType='C'  and length(trim(parseDelimiter))>0 GROUP BY fieldDisplayType,fieldGroupName,fieldDisplayName,parentType HAVING max(INSTR(customFieldData,parseDelimiter))=0 ORDER BY NULL) a;
+
+
+
+#1) contact_activity_custom_data linkingId is invalid
+INSERT INTO smoke_test_report_for_template (errorMsg,passFlag,errorCount,sqlStatement)
+SELECT 'contact_activity_custom_data linkingId is invalid',IF(COUNT(*)>0,'Fail','Pass') result,COUNT(*) number,'SELECT * FROM z_newcreate_template_custom_field where parentType=''contact_activity_custom_data'' and neon_linkingId is null'
+FROM z_newcreate_template_custom_field where parentType='contact_activity_custom_data' and neon_linkingId is null;
+
+
+#2) contact_activity_custom_data linkingId is NULL
+INSERT INTO smoke_test_report_for_template (errorMsg,passFlag,errorCount,sqlStatement)
+SELECT 'contact_activity_custom_data linkingId is NULL',IF(COUNT(*)>0,'Fail','Pass') result,COUNT(*) number,'SELECT * FROM z_newcreate_template_custom_field z1 where parentType=''contact_activity_custom_data'' and linkingId is null'
+FROM z_newcreate_template_custom_field z1 where parentType='contact_activity_custom_data'  and linkingId is null;
+
+#3) contact_activity_custom_data one-line/multiple-line/drop/radio have multiple different values of one contact activity
+INSERT INTO smoke_test_report_for_template (errorMsg,passFlag,errorCount,sqlStatement)
+SELECT 'contact_activity_custom_data one-line/multiple-line/drop/radio have multiple different values of one contact_activity',IF(COUNT(*)>0,'Fail','Pass') result,COUNT(*) number,'SELECT * from z_newcreate_template_custom_field z1 where parentType=''contact_activity_custom_data'' and fieldDisplayType in(''O'',''M'',''R'',''D'')  AND length(trim(linkingId))>0 and length(trim(fieldDisplayName))>0 and length(trim(customFieldData))>0 GROUP BY linkingId,linkingIdSourceTable,linkingIdSeq,fieldDisplayName,fieldDisplayType,fieldGroupName HAVING count(DISTINCT customFieldData)>1'
+FROM (SELECT * from z_newcreate_template_custom_field z1 where parentType='contact_activity_custom_data' and fieldDisplayType in('O','M','R','D')  AND length(trim(linkingId))>0 and length(trim(fieldDisplayName))>0 and length(trim(customFieldData))>0
+GROUP BY linkingId,linkingIdSourceTable,linkingIdSeq,fieldDisplayName,fieldDisplayType,fieldGroupName HAVING count(DISTINCT customFieldData)>1 ORDER BY NULL)a;
+
+#4) contact_activity_custom_data drop/radio optionDescription may need parse and import as check custom
+INSERT INTO smoke_test_report_for_template (errorMsg,passFlag,errorCount,sqlStatement)
+SELECT 'contact_activity_custom_data drop/radio optionDescription may need parse and import as check custom',IF(COUNT(*)>0,'Fail','Pass') result,COUNT(*) number,'SELECT * FROM z_newcreate_template_custom_field z1 where parentType=''contact_activity_custom_data''  and fieldDisplayType in(''R'',''D'') and customFieldData REGEXP "[[.\\r.]]|,|;|[[.\\\\.]]|[[./.]]|\\\\|"'
+FROM z_newcreate_template_custom_field z1 where parentType='contact_activity_custom_data'  and fieldDisplayType in('R','D') and customFieldData REGEXP          '[[.\r.]]|,|;|[[.\\.]]|[[./.]]|\\|';
+
+#5) contact_activity_custom_data There exist some one-line text custom fields that may be need to changed to dropdown display type. Please check again.
+INSERT INTO smoke_test_report_for_template (errorMsg,passFlag,errorCount,sqlStatement)
+SELECT "contact_activity_custom_data There exist some one-line text custom fields that may be need to changed to dropdown display type. Please check again.", IF(COUNT(*)>0, 'Warning', 'Pass'),count(*) ,'SELECT *  FROM (SELECT *,CONCAT_WS('''',fieldDisplayName,fieldDisplayType,fieldGroupName) as fieldId FROM z_newcreate_template_custom_field where parentType=''contact_activity_custom_data''  and fieldDisplayType in(''O'',''M'') GROUP BY fieldDisplayName,fieldDisplayType,fieldGroupName HAVING COUNT(DISTINCT customFieldData)<50) AS temp1 JOIN (SELECT *, COUNT(1),CONCAT_WS('''',fieldDisplayName,fieldDisplayType,fieldGroupName) as fieldId FROM z_newcreate_template_custom_field where parentType=''contact_activity_custom_data''  and fieldDisplayType in(''O'',''M'') GROUP BY fieldDisplayName,fieldDisplayType,fieldGroupName,customFieldData HAVING COUNT(1)>10) temp2 ON temp1.fieldId = temp2.fieldId GROUP BY temp1.fieldId'
+FROM (SELECT count(*) FROM (SELECT *,CONCAT_WS('''',fieldDisplayName,fieldDisplayType,fieldGroupName) as fieldId FROM z_newcreate_template_custom_field where parentType='contact_activity_custom_data'  and fieldDisplayType in('O','M')  GROUP BY fieldDisplayName,fieldDisplayType,fieldGroupName HAVING COUNT(DISTINCT customFieldData)<50 ORDER BY NULL) AS temp1 JOIN (SELECT *, COUNT(1),CONCAT_WS('''',fieldDisplayName,fieldDisplayType,fieldGroupName) as fieldId FROM z_newcreate_template_custom_field where parentType='contact_activity_custom_data'  and fieldDisplayType in('O','M') GROUP BY fieldDisplayName,fieldDisplayType,fieldGroupName,customFieldData HAVING COUNT(1)>10 ORDER BY NULL) temp2 ON temp1.fieldId = temp2.fieldId GROUP BY temp1.fieldId ORDER BY NULL) a;
+
+
+########################################################donation_custom_data
+#6) donation_custom_data linkingId is invalid
+INSERT INTO smoke_test_report_for_template (errorMsg,passFlag,errorCount,sqlStatement)
+SELECT 'donation_custom_data linkingId is invalid',IF(COUNT(*)>0,'Fail','Pass') result,COUNT(*) number,'SELECT * FROM z_newcreate_template_custom_field where parentType=''donation_custom_data'' and neon_linkingId is null'
+FROM z_newcreate_template_custom_field where parentType='donation_custom_data' and neon_linkingId is null;
+
+
+
+#7) donation_custom_data linkingId is NULL
+INSERT INTO smoke_test_report_for_template (errorMsg,passFlag,errorCount,sqlStatement)
+SELECT 'donation_custom_data linkingId is NULL',IF(COUNT(*)>0,'Fail','Pass') result,COUNT(*) number,'SELECT * FROM z_newcreate_template_custom_field z1 where parentType=''donation_custom_data'' and linkingId is null'
+FROM z_newcreate_template_custom_field z1 where parentType='donation_custom_data'  and linkingId is null;
+
+
+#8) donation_custom_data one-line/multiple-line/drop/radio have multiple different values of one donation
+INSERT INTO smoke_test_report_for_template (errorMsg,passFlag,errorCount,sqlStatement)
+SELECT 'donation_custom_data one-line/multiple-line/drop/radio have multiple different values of one donation',IF(COUNT(*)>0,'Fail','Pass') result,COUNT(*) number,'SELECT * from z_newcreate_template_custom_field z1 where parentType=''donation_custom_data'' and fieldDisplayType in(''O'',''M'',''R'',''D'')  AND length(trim(linkingId))>0 and length(trim(fieldDisplayName))>0 and length(trim(customFieldData))>0 GROUP BY linkingId,linkingIdSourceTable,linkingIdSeq,fieldDisplayName,fieldDisplayType,fieldGroupName HAVING count(DISTINCT customFieldData)>1'
+FROM (SELECT * from z_newcreate_template_custom_field z1 where parentType='donation_custom_data' and fieldDisplayType in('O','M','R','D')  AND length(trim(linkingId))>0 and length(trim(fieldDisplayName))>0 and length(trim(customFieldData))>0
+GROUP BY linkingId,linkingIdSourceTable,linkingIdSeq,fieldDisplayName,fieldDisplayType,fieldGroupName HAVING count(DISTINCT customFieldData)>1 ORDER BY NULL)a;
+
+
+#9) donation_custom_data drop/radio optionDescription may need parse and import as check custom
+INSERT INTO smoke_test_report_for_template (errorMsg,passFlag,errorCount,sqlStatement)
+SELECT 'donation_custom_data drop/radio optionDescription may need parse and import as check custom',IF(COUNT(*)>0,'Fail','Pass') result,COUNT(*) number,'SELECT * FROM z_newcreate_template_custom_field z1 where parentType=''donation_custom_data''  and fieldDisplayType in(''R'',''D'') and customFieldData REGEXP "[[.\\r.]]|,|;|[[.\\\\.]]|[[./.]]|\\\\|"'
+FROM z_newcreate_template_custom_field z1 where parentType='donation_custom_data'  and fieldDisplayType in('R','D') and customFieldData REGEXP '[[.\r.]]|,|;|[[.\\.]]|[[./.]]|\\|';
+
+#10) donation_custom_data There exist some one-line text custom fields that may be need to changed to dropdown display type. Please check again.
+INSERT INTO smoke_test_report_for_template (errorMsg,passFlag,errorCount,sqlStatement)
+SELECT "donation_custom_data There exist some one-line text custom fields that may be need to changed to dropdown display type. Please check again.", IF(COUNT(*)>0, 'Warning', 'Pass'),count(*) ,'SELECT *  FROM (SELECT *,CONCAT_WS('''',fieldDisplayName,fieldDisplayType,fieldGroupName) as fieldId FROM z_newcreate_template_custom_field where parentType=''donation_custom_data''  and fieldDisplayType in(''O'',''M'') GROUP BY fieldDisplayName,fieldDisplayType,fieldGroupName HAVING COUNT(DISTINCT customFieldData)<50) AS temp1 JOIN (SELECT *, COUNT(1),CONCAT_WS('''',fieldDisplayName,fieldDisplayType,fieldGroupName) as fieldId FROM z_newcreate_template_custom_field where parentType=''donation_custom_data''  and fieldDisplayType in(''O'',''M'') GROUP BY fieldDisplayName,fieldDisplayType,fieldGroupName,customFieldData HAVING COUNT(1)>10) temp2 ON temp1.fieldId = temp2.fieldId GROUP BY temp1.fieldId'
+FROM (SELECT count(*) FROM (SELECT *,CONCAT_WS('''',fieldDisplayName,fieldDisplayType,fieldGroupName) as fieldId FROM z_newcreate_template_custom_field where parentType='donation_custom_data'  and fieldDisplayType in('O','M')  GROUP BY fieldDisplayName,fieldDisplayType,fieldGroupName HAVING COUNT(DISTINCT customFieldData)<50 ORDER BY NULL) AS temp1 JOIN (SELECT *, COUNT(1),CONCAT_WS('''',fieldDisplayName,fieldDisplayType,fieldGroupName) as fieldId FROM z_newcreate_template_custom_field where parentType='donation_custom_data'  and fieldDisplayType in('O','M') GROUP BY fieldDisplayName,fieldDisplayType,fieldGroupName,customFieldData HAVING COUNT(1)>10 ORDER BY NULL) temp2 ON temp1.fieldId = temp2.fieldId GROUP BY temp1.fieldId ORDER BY NULL) a;
+
+##event_attendee_custom_data
+#11) event_attendee_custom_data linkingId is invalid
+INSERT INTO smoke_test_report_for_template (errorMsg,passFlag,errorCount,sqlStatement)
+SELECT 'event_attendee_custom_data linkingId is invalid',IF(COUNT(*)>0,'Fail','Pass') result,COUNT(*) number,'SELECT * FROM z_newcreate_template_custom_field WHERE parentType=''event_attendee_custom_data'' and neon_linkingId is null'
+FROM z_newcreate_template_custom_field WHERE parentType='event_attendee_custom_data' and neon_linkingId is null;
+
+
+#12) event_attendee_custom_data linkingId is NULL
+INSERT INTO smoke_test_report_for_template (errorMsg,passFlag,errorCount,sqlStatement)
+SELECT 'event_attendee_custom_data linkingId is NULL',IF(COUNT(*)>0,'Fail','Pass') result,COUNT(*) number,'SELECT * FROM z_newcreate_template_custom_field z1 where parentType=''event_attendee_custom_data'' and linkingId is null'
+FROM z_newcreate_template_custom_field z1 where parentType='event_attendee_custom_data'  and linkingId is null;
+
+#13) event_attendee_custom_data one-line/multiple-line/drop/radio have multiple different values of one event_attendee
+INSERT INTO smoke_test_report_for_template (errorMsg,passFlag,errorCount,sqlStatement)
+SELECT 'event_attendee_custom_data one-line/multiple-line/drop/radio have multiple different values of one event_attendee',IF(COUNT(*)>0,'Fail','Pass') result,COUNT(*) number,'SELECT * from z_newcreate_template_custom_field z1 where parentType=''event_attendee_custom_data'' and fieldDisplayType in(''O'',''M'',''R'',''D'')  AND length(trim(linkingId))>0 and length(trim(fieldDisplayName))>0 and length(trim(customFieldData))>0 GROUP BY linkingId,linkingIdSourceTable,linkingIdSeq,fieldDisplayName,fieldDisplayType,fieldGroupName HAVING count(DISTINCT customFieldData)>1'
+FROM (SELECT * from z_newcreate_template_custom_field z1 where parentType='event_attendee_custom_data' and fieldDisplayType in('O','M','R','D')  AND length(trim(linkingId))>0 and length(trim(fieldDisplayName))>0 and length(trim(customFieldData))>0
+GROUP BY linkingId,linkingIdSourceTable,linkingIdSeq,fieldDisplayName,fieldDisplayType,fieldGroupName HAVING count(DISTINCT customFieldData)>1 ORDER BY NULL)a;
+
+
+#14) event_attendee_custom_data drop/radio optionDescription may need parse and import as check custom
+INSERT INTO smoke_test_report_for_template (errorMsg,passFlag,errorCount,sqlStatement)
+SELECT 'event_attendee_custom_data drop/radio optionDescription may need parse and import as check custom',IF(COUNT(*)>0,'Fail','Pass') result,COUNT(*) number,'SELECT * FROM z_newcreate_template_custom_field z1 where parentType=''event_attendee_custom_data''  and fieldDisplayType in(''R'',''D'') and customFieldData REGEXP "[[.\\r.]]|,|;|[[.\\\\.]]|[[./.]]|\\\\|"'
+FROM z_newcreate_template_custom_field z1 where parentType='event_attendee_custom_data'  and fieldDisplayType in('R','D') and customFieldData REGEXP '[[.\r.]]|,|;|[[.\\.]]|[[./.]]|\\|';
+
+#15) event_attendee_custom_data There exist some one-line text custom fields that may be need to changed to dropdown display type. Please check again.
+INSERT INTO smoke_test_report_for_template (errorMsg,passFlag,errorCount,sqlStatement)
+SELECT "event_attendee_custom_data here exist some one-line text custom fields that may be need to changed to dropdown display type. Please check again.", IF(COUNT(*)>0, 'Warning', 'Pass'),count(*) ,'SELECT *  FROM (SELECT *,CONCAT_WS('''',fieldDisplayName,fieldDisplayType,fieldGroupName) as fieldId FROM z_newcreate_template_custom_field where parentType=''event_attendee_custom_data''  and fieldDisplayType in(''O'',''M'') GROUP BY fieldDisplayName,fieldDisplayType,fieldGroupName HAVING COUNT(DISTINCT customFieldData)<50) AS temp1 JOIN (SELECT *, COUNT(1),CONCAT_WS('''',fieldDisplayName,fieldDisplayType,fieldGroupName) as fieldId FROM z_newcreate_template_custom_field where parentType=''event_attendee_custom_data''  and fieldDisplayType in(''O'',''M'') GROUP BY fieldDisplayName,fieldDisplayType,fieldGroupName,customFieldData HAVING COUNT(1)>10) temp2 ON temp1.fieldId = temp2.fieldId GROUP BY temp1.fieldId'
+FROM (SELECT count(*) FROM (SELECT *,CONCAT_WS('''',fieldDisplayName,fieldDisplayType,fieldGroupName) as fieldId FROM z_newcreate_template_custom_field where parentType='event_attendee_custom_data'  and fieldDisplayType in('O','M')  GROUP BY fieldDisplayName,fieldDisplayType,fieldGroupName HAVING COUNT(DISTINCT customFieldData)<50 ORDER BY NULL) AS temp1 JOIN (SELECT *, COUNT(1),CONCAT_WS('''',fieldDisplayName,fieldDisplayType,fieldGroupName) as fieldId FROM z_newcreate_template_custom_field where parentType='event_attendee_custom_data'  and fieldDisplayType in('O','M') GROUP BY fieldDisplayName,fieldDisplayType,fieldGroupName,customFieldData HAVING COUNT(1)>10 ORDER BY NULL) temp2 ON temp1.fieldId = temp2.fieldId GROUP BY temp1.fieldId ORDER BY NULL) a;
+
+
+##event_registration_custom_data
+#16) event_registration_custom_data linkingId is invalid
+INSERT INTO smoke_test_report_for_template (errorMsg,passFlag,errorCount,sqlStatement)
+SELECT 'event_registration_custom_data linkingId is invalid',IF(COUNT(*)>0,'Fail','Pass') result,COUNT(*) number,'SELECT * FROM z_newcreate_template_custom_field where parentType=''event_registration_custom_data'' and neon_linkingId is null'
+FROM z_newcreate_template_custom_field where parentType='event_registration_custom_data' and neon_linkingId is null;
+
+
+#17) event_registration_custom_data linkingId is NULL
+INSERT INTO smoke_test_report_for_template (errorMsg,passFlag,errorCount,sqlStatement)
+SELECT 'event_registration_custom_data linkingId is NULL',IF(COUNT(*)>0,'Fail','Pass') result,COUNT(*) number,'SELECT * FROM z_newcreate_template_custom_field z1 where parentType=''event_registration_custom_data'' and linkingId is null'
+FROM z_newcreate_template_custom_field z1 where parentType='event_registration_custom_data'  and linkingId is null;
+
+
+#18) event_registration_custom_data one-line/multiple-line/drop/radio have multiple different values of one event_registration
+INSERT INTO smoke_test_report_for_template (errorMsg,passFlag,errorCount,sqlStatement)
+SELECT 'event_registration_custom_data one-line/multiple-line/drop/radio have multiple different values of one event_registration',IF(COUNT(*)>0,'Fail','Pass') result,COUNT(*) number,'SELECT * from z_newcreate_template_custom_field z1 where parentType=''event_registration_custom_data'' and fieldDisplayType in(''O'',''M'',''R'',''D'')  AND length(trim(linkingId))>0 and length(trim(fieldDisplayName))>0 and length(trim(customFieldData))>0 GROUP BY linkingId,linkingIdSourceTable,linkingIdSeq,fieldDisplayName,fieldDisplayType,fieldGroupName HAVING count(DISTINCT customFieldData)>1'
+FROM (SELECT * from z_newcreate_template_custom_field z1 where parentType='event_registration_custom_data' and fieldDisplayType in('O','M','R','D')  AND length(trim(linkingId))>0 and length(trim(fieldDisplayName))>0 and length(trim(customFieldData))>0
+GROUP BY linkingId,linkingIdSourceTable,linkingIdSeq,fieldDisplayName,fieldDisplayType,fieldGroupName HAVING count(DISTINCT customFieldData)>1 ORDER BY NULL)a;
+
+
+#19) event_registration_custom_data drop/radio optionDescription may need parse and import as check custom
+INSERT INTO smoke_test_report_for_template (errorMsg,passFlag,errorCount,sqlStatement)
+SELECT 'event_registration_custom_data drop/radio optionDescription may need parse and import as check custom',IF(COUNT(*)>0,'Fail','Pass') result,COUNT(*) number,'SELECT * FROM z_newcreate_template_custom_field z1 where parentType=''event_registration_custom_data''  and fieldDisplayType in(''R'',''D'') and customFieldData REGEXP "[[.\\r.]]|,|;|[[.\\\\.]]|[[./.]]|\\\\|"'
+FROM z_newcreate_template_custom_field z1 where parentType='event_registration_custom_data'  and fieldDisplayType in('R','D') and customFieldData REGEXP '[[.\r.]]|,|;|[[.\\.]]|[[./.]]|\\|';
+
+#20) event_registration_custom_data There exist some one-line text custom fields that may be need to changed to dropdown display type. Please check again.
+INSERT INTO smoke_test_report_for_template (errorMsg,passFlag,errorCount,sqlStatement)
+SELECT "event_registration_custom_data here exist some one-line text custom fields that may be need to changed to dropdown display type. Please check again.", IF(COUNT(*)>0, 'Warning', 'Pass'),count(*) ,'SELECT *  FROM (SELECT *,CONCAT_WS('''',fieldDisplayName,fieldDisplayType,fieldGroupName) as fieldId FROM z_newcreate_template_custom_field where parentType=''event_registration_custom_data''  and fieldDisplayType in(''O'',''M'') GROUP BY fieldDisplayName,fieldDisplayType,fieldGroupName HAVING COUNT(DISTINCT customFieldData)<50) AS temp1 JOIN (SELECT *, COUNT(1),CONCAT_WS('''',fieldDisplayName,fieldDisplayType,fieldGroupName) as fieldId FROM z_newcreate_template_custom_field where parentType=''event_registration_custom_data''  and fieldDisplayType in(''O'',''M'') GROUP BY fieldDisplayName,fieldDisplayType,fieldGroupName,customFieldData HAVING COUNT(1)>10) temp2 ON temp1.fieldId = temp2.fieldId GROUP BY temp1.fieldId'
+FROM (SELECT count(*) FROM (SELECT *,CONCAT_WS('''',fieldDisplayName,fieldDisplayType,fieldGroupName) as fieldId FROM z_newcreate_template_custom_field where parentType='event_registration_custom_data'  and fieldDisplayType in('O','M')  GROUP BY fieldDisplayName,fieldDisplayType,fieldGroupName HAVING COUNT(DISTINCT customFieldData)<50 ORDER BY NULL) AS temp1 JOIN (SELECT *, COUNT(1),CONCAT_WS('''',fieldDisplayName,fieldDisplayType,fieldGroupName) as fieldId FROM z_newcreate_template_custom_field where parentType='event_registration_custom_data'  and fieldDisplayType in('O','M') GROUP BY fieldDisplayName,fieldDisplayType,fieldGroupName,customFieldData HAVING COUNT(1)>10 ORDER BY NULL) temp2 ON temp1.fieldId = temp2.fieldId GROUP BY temp1.fieldId ORDER BY NULL) a;
+
+## membership_listing_custom_data
+#21) membership_listing_custom_data linkingId is invalid
+INSERT INTO smoke_test_report_for_template (errorMsg,passFlag,errorCount,sqlStatement)
+SELECT 'membership_listing_custom_data linkingId is invalid',IF(COUNT(*)>0,'Fail','Pass') result,COUNT(*) number,'SELECT * FROM z_newcreate_template_custom_field where parentType=''membership_listing_custom_data'' and neon_linkingId is null'
+FROM z_newcreate_template_custom_field where parentType='membership_listing_custom_data' and neon_linkingId is null;
+
+
+
+#22) membership_listing_custom_data linkingId is NULL
+INSERT INTO smoke_test_report_for_template (errorMsg,passFlag,errorCount,sqlStatement)
+SELECT 'membership_listing_custom_data linkingId is NULL',IF(COUNT(*)>0,'Fail','Pass') result,COUNT(*) number,'SELECT * FROM z_newcreate_template_custom_field z1 where parentType=''membership_listing_custom_data'' and linkingId is null'
+FROM z_newcreate_template_custom_field z1 where parentType='membership_listing_custom_data'  and linkingId is null;
+
+#23) membership_listing_custom_data one-line/multiple-line/drop/radio have multiple different values of one membership_listing
+INSERT INTO smoke_test_report_for_template (errorMsg,passFlag,errorCount,sqlStatement)
+SELECT 'membership_listing_custom_data one-line/multiple-line/drop/radio have multiple different values of one membership_listing',IF(COUNT(*)>0,'Fail','Pass') result,COUNT(*) number,'SELECT * from z_newcreate_template_custom_field z1 where parentType=''membership_listing_custom_data'' and fieldDisplayType in(''O'',''M'',''R'',''D'')  AND length(trim(linkingId))>0 and length(trim(fieldDisplayName))>0 and length(trim(customFieldData))>0 GROUP BY linkingId,linkingIdSourceTable,linkingIdSeq,fieldDisplayName,fieldDisplayType,fieldGroupName HAVING count(DISTINCT customFieldData)>1'
+FROM (SELECT * from z_newcreate_template_custom_field z1 where parentType='membership_listing_custom_data' and fieldDisplayType in('O','M','R','D')  AND length(trim(linkingId))>0 and length(trim(fieldDisplayName))>0 and length(trim(customFieldData))>0
+GROUP BY linkingId,linkingIdSourceTable,linkingIdSeq,fieldDisplayName,fieldDisplayType,fieldGroupName HAVING count(DISTINCT customFieldData)>1 ORDER BY NULL)a;
+
+#24) membership_listing_custom_data drop/radio optionDescription may need parse and import as check custom
+INSERT INTO smoke_test_report_for_template (errorMsg,passFlag,errorCount,sqlStatement)
+SELECT 'membership_listing_custom_data drop/radio optionDescription may need parse and import as check custom',IF(COUNT(*)>0,'Fail','Pass') result,COUNT(*) number,'SELECT * FROM z_newcreate_template_custom_field z1 where parentType=''membership_listing_custom_data''  and fieldDisplayType in(''R'',''D'') and customFieldData REGEXP "[[.\\r.]]|,|;|[[.\\\\.]]|[[./.]]|\\\\|"'
+FROM z_newcreate_template_custom_field z1 where parentType='membership_listing_custom_data'  and fieldDisplayType in('R','D') and customFieldData REGEXP '[[.\r.]]|,|;|[[.\\.]]|[[./.]]|\\|';
+
+#25) membership_listing_custom_data There exist some one-line text custom fields that may be need to changed to dropdown display type. Please check again.
+INSERT INTO smoke_test_report_for_template (errorMsg,passFlag,errorCount,sqlStatement)
+SELECT "membership_listing_custom_data here exist some one-line text custom fields that may be need to changed to dropdown display type. Please check again.", IF(COUNT(*)>0, 'Warning', 'Pass'),count(*) ,'SELECT *  FROM (SELECT *,CONCAT_WS('''',fieldDisplayName,fieldDisplayType,fieldGroupName) as fieldId FROM z_newcreate_template_custom_field where parentType=''membership_listing_custom_data''  and fieldDisplayType in(''O'',''M'') GROUP BY fieldDisplayName,fieldDisplayType,fieldGroupName HAVING COUNT(DISTINCT customFieldData)<50) AS temp1 JOIN (SELECT *, COUNT(1),CONCAT_WS('''',fieldDisplayName,fieldDisplayType,fieldGroupName) as fieldId FROM z_newcreate_template_custom_field where parentType=''membership_listing_custom_data''  and fieldDisplayType in(''O'',''M'') GROUP BY fieldDisplayName,fieldDisplayType,fieldGroupName,customFieldData HAVING COUNT(1)>10) temp2 ON temp1.fieldId = temp2.fieldId GROUP BY temp1.fieldId'
+FROM (SELECT count(*) FROM (SELECT *,CONCAT_WS('''',fieldDisplayName,fieldDisplayType,fieldGroupName) as fieldId FROM z_newcreate_template_custom_field where parentType='membership_listing_custom_data'  and fieldDisplayType in('O','M')  GROUP BY fieldDisplayName,fieldDisplayType,fieldGroupName HAVING COUNT(DISTINCT customFieldData)<50 ORDER BY NULL) AS temp1 JOIN (SELECT *, COUNT(1),CONCAT_WS('''',fieldDisplayName,fieldDisplayType,fieldGroupName) as fieldId FROM z_newcreate_template_custom_field where parentType='membership_listing_custom_data'  and fieldDisplayType in('O','M') GROUP BY fieldDisplayName,fieldDisplayType,fieldGroupName,customFieldData HAVING COUNT(1)>10 ORDER BY NULL) temp2 ON temp1.fieldId = temp2.fieldId GROUP BY temp1.fieldId ORDER BY NULL) a;
+
+##product_custom_data
+#26) product_custom_data linkingId is invalid
+INSERT INTO smoke_test_report_for_template (errorMsg,passFlag,errorCount,sqlStatement)
+SELECT 'product_custom_data linkingId is invalid',IF(COUNT(*)>0,'Fail','Pass') result,COUNT(*) number,'SELECT * FROM z_newcreate_template_custom_field where parentType=''product_custom_data'' and neon_linkingId is null'
+FROM z_newcreate_template_custom_field where parentType='product_custom_data' and neon_linkingId is null;
+
+
+
+#27) product_custom_data linkingId is NULL
+INSERT INTO smoke_test_report_for_template (errorMsg,passFlag,errorCount,sqlStatement)
+SELECT 'product_custom_data linkingId is NULL',IF(COUNT(*)>0,'Fail','Pass') result,COUNT(*) number,'SELECT * FROM z_newcreate_template_custom_field z1 where parentType=''product_custom_data'' and linkingId is null'
+FROM z_newcreate_template_custom_field z1 where parentType='product_custom_data'  and linkingId is null;
+
+#28) product_custom_data one-line/multiple-line/drop/radio have multiple different values of one product
+INSERT INTO smoke_test_report_for_template (errorMsg,passFlag,errorCount,sqlStatement)
+SELECT 'product_custom_data one-line/multiple-line/drop/radio have multiple different values of one product',IF(COUNT(*)>0,'Fail','Pass') result,COUNT(*) number,'SELECT * from z_newcreate_template_custom_field z1 where parentType=''product_custom_data'' and fieldDisplayType in(''O'',''M'',''R'',''D'')  AND length(trim(linkingId))>0 and length(trim(fieldDisplayName))>0 and length(trim(customFieldData))>0 GROUP BY linkingId,linkingIdSourceTable,linkingIdSeq,fieldDisplayName,fieldDisplayType,fieldGroupName HAVING count(DISTINCT customFieldData)>1'
+FROM (SELECT * from z_newcreate_template_custom_field z1 where parentType='product_custom_data' and fieldDisplayType in('O','M','R','D')  AND length(trim(linkingId))>0 and length(trim(fieldDisplayName))>0 and length(trim(customFieldData))>0
+GROUP BY linkingId,linkingIdSourceTable,linkingIdSeq,fieldDisplayName,fieldDisplayType,fieldGroupName HAVING count(DISTINCT customFieldData)>1 ORDER BY NULL)a;
+
+#29) product_custom_data drop/radio optionDescription may need parse and import as check custom
+INSERT INTO smoke_test_report_for_template (errorMsg,passFlag,errorCount,sqlStatement)
+SELECT 'product_custom_data drop/radio optionDescription may need parse and import as check custom',IF(COUNT(*)>0,'Fail','Pass') result,COUNT(*) number,'SELECT * FROM z_newcreate_template_custom_field z1 where parentType=''product_custom_data''  and fieldDisplayType in(''R'',''D'') and customFieldData REGEXP "[[.\\r.]]|,|;|[[.\\\\.]]|[[./.]]|\\\\|"'
+FROM z_newcreate_template_custom_field z1 where parentType='product_custom_data'  and fieldDisplayType in('R','D') and customFieldData REGEXP '[[.\r.]]|,|;|[[.\\.]]|[[./.]]|\\|';
+
+#30) product_custom_data There exist some one-line text custom fields that may be need to changed to dropdown display type. Please check again.
+INSERT INTO smoke_test_report_for_template (errorMsg,passFlag,errorCount,sqlStatement)
+SELECT "product_custom_data here exist some one-line text custom fields that may be need to changed to dropdown display type. Please check again.", IF(COUNT(*)>0, 'Warning', 'Pass'),count(*) ,'SELECT *  FROM (SELECT *,CONCAT_WS('''',fieldDisplayName,fieldDisplayType,fieldGroupName) as fieldId FROM z_newcreate_template_custom_field where parentType=''product_custom_data''  and fieldDisplayType in(''O'',''M'') GROUP BY fieldDisplayName,fieldDisplayType,fieldGroupName HAVING COUNT(DISTINCT customFieldData)<50) AS temp1 JOIN (SELECT *, COUNT(1),CONCAT_WS('''',fieldDisplayName,fieldDisplayType,fieldGroupName) as fieldId FROM z_newcreate_template_custom_field where parentType=''product_custom_data''  and fieldDisplayType in(''O'',''M'') GROUP BY fieldDisplayName,fieldDisplayType,fieldGroupName,customFieldData HAVING COUNT(1)>10) temp2 ON temp1.fieldId = temp2.fieldId GROUP BY temp1.fieldId'
+FROM (SELECT count(*) FROM (SELECT *,CONCAT_WS('''',fieldDisplayName,fieldDisplayType,fieldGroupName) as fieldId FROM z_newcreate_template_custom_field where parentType='product_custom_data'  and fieldDisplayType in('O','M')  GROUP BY fieldDisplayName,fieldDisplayType,fieldGroupName HAVING COUNT(DISTINCT customFieldData)<50 ORDER BY NULL) AS temp1 JOIN (SELECT *, COUNT(1),CONCAT_WS('''',fieldDisplayName,fieldDisplayType,fieldGroupName) as fieldId FROM z_newcreate_template_custom_field where parentType='product_custom_data'  and fieldDisplayType in('O','M') GROUP BY fieldDisplayName,fieldDisplayType,fieldGroupName,customFieldData HAVING COUNT(1)>10 ORDER BY NULL) temp2 ON temp1.fieldId = temp2.fieldId GROUP BY temp1.fieldId ORDER BY NULL) a;
+
+
+##account_custom_data
+#31) account_custom_data linkingId is invalid
+INSERT INTO smoke_test_report_for_template (errorMsg,passFlag,errorCount,sqlStatement)
+SELECT 'account_custom_data linkingId is invalid',IF(COUNT(*)>0,'Fail','Pass') result,COUNT(*) number,'SELECT * FROM z_newcreate_template_custom_field WHERE parentType=''account_custom_data'' and neon_linkingId is null'
+FROM z_newcreate_template_custom_field WHERE parentType='account_custom_data' and neon_linkingId is null;
+
+
+#32) account_custom_data linkingId is NULL
+INSERT INTO smoke_test_report_for_template (errorMsg,passFlag,errorCount,sqlStatement)
+SELECT 'account_custom_data linkingId is NULL',IF(COUNT(*)>0,'Fail','Pass') result,COUNT(*) number,'SELECT * FROM z_newcreate_template_custom_field z1 where parentType=''account_custom_data'' and linkingId is null'
+FROM z_newcreate_template_custom_field z1 where parentType='account_custom_data'  and linkingId is null;
+
+
+#33) account_custom_data one-line/multiple-line/drop/radio have multiple different values of one account
+INSERT INTO smoke_test_report_for_template (errorMsg,passFlag,errorCount,sqlStatement)
+SELECT 'account_custom_data one-line/multiple-line/drop/radio have multiple different values of one account',IF(COUNT(*)>0,'Fail','Pass') result,COUNT(*) number,'SELECT * from z_newcreate_template_custom_field z1 where parentType=''account_custom_data'' and fieldDisplayType in(''O'',''M'',''R'',''D'')  AND length(trim(linkingId))>0 and length(trim(fieldDisplayName))>0 and length(trim(customFieldData))>0 GROUP BY linkingId,linkingIdSourceTable,linkingIdSeq,fieldDisplayName,fieldDisplayType,fieldGroupName HAVING count(DISTINCT customFieldData)>1'
+FROM (SELECT * from z_newcreate_template_custom_field z1 where parentType='account_custom_data' and fieldDisplayType in('O','M','R','D')  AND length(trim(linkingId))>0 and length(trim(fieldDisplayName))>0 and length(trim(customFieldData))>0
+GROUP BY linkingId,linkingIdSourceTable,linkingIdSeq,fieldDisplayName,fieldDisplayType,fieldGroupName HAVING count(DISTINCT customFieldData)>1 ORDER BY NULL)a;
+
+
+#34) account_custom_data drop/radio optionDescription may need parse and import as check custom
+INSERT INTO smoke_test_report_for_template (errorMsg,passFlag,errorCount,sqlStatement)
+SELECT 'account_custom_data drop/radio optionDescription may need parse and import as check custom',IF(COUNT(*)>0,'Fail','Pass') result,COUNT(*) number,'SELECT * FROM z_newcreate_template_custom_field z1 where parentType=''account_custom_data''  and fieldDisplayType in(''R'',''D'') and customFieldData REGEXP "[[.\\r.]]|,|;|[[.\\\\.]]|[[./.]]|\\\\|"'
+FROM z_newcreate_template_custom_field z1 where parentType='account_custom_data'  and fieldDisplayType in('R','D') and customFieldData REGEXP '[[.\r.]]|,|;|[[.\\.]]|[[./.]]|\\|';
+
+#35) account_custom_data There exist some one-line text custom fields that may be need to changed to dropdown display type. Please check again.
+INSERT INTO smoke_test_report_for_template (errorMsg,passFlag,errorCount,sqlStatement)
+SELECT "account_custom_data here exist some one-line text custom fields that may be need to changed to dropdown display type. Please check again.", IF(COUNT(*)>0, 'Warning', 'Pass'),count(*) ,'SELECT *  FROM (SELECT *,CONCAT_WS('''',fieldDisplayName,fieldDisplayType,fieldGroupName) as fieldId FROM z_newcreate_template_custom_field where parentType=''account_custom_data''  and fieldDisplayType in(''O'',''M'') GROUP BY fieldDisplayName,fieldDisplayType,fieldGroupName HAVING COUNT(DISTINCT customFieldData)<50) AS temp1 JOIN (SELECT *, COUNT(1),CONCAT_WS('''',fieldDisplayName,fieldDisplayType,fieldGroupName) as fieldId FROM z_newcreate_template_custom_field where parentType=''account_custom_data''  and fieldDisplayType in(''O'',''M'') GROUP BY fieldDisplayName,fieldDisplayType,fieldGroupName,customFieldData HAVING COUNT(1)>10) temp2 ON temp1.fieldId = temp2.fieldId GROUP BY temp1.fieldId'
+FROM (SELECT count(*) FROM (SELECT *,CONCAT_WS('''',fieldDisplayName,fieldDisplayType,fieldGroupName) as fieldId FROM z_newcreate_template_custom_field where parentType='account_custom_data'  and fieldDisplayType in('O','M')  GROUP BY fieldDisplayName,fieldDisplayType,fieldGroupName HAVING COUNT(DISTINCT customFieldData)<50 ORDER BY NULL) AS temp1 JOIN (SELECT *, COUNT(*),CONCAT_WS('''',fieldDisplayName,fieldDisplayType,fieldGroupName) as fieldId FROM z_newcreate_template_custom_field where parentType='account_custom_data'  and fieldDisplayType in('O','M') GROUP BY fieldDisplayName,fieldDisplayType,fieldGroupName,customFieldData HAVING COUNT(*)>10 ORDER BY NULL) temp2 ON temp1.fieldId = temp2.fieldId GROUP BY temp1.fieldId ORDER BY NULL) a;
+
+
+#36) user_custom_data linkingId is invalid
+INSERT INTO smoke_test_report_for_template (errorMsg,passFlag,errorCount,sqlStatement)
+SELECT 'user_custom_data linkingId is invalid',IF(COUNT(*)>0,'Fail','Pass') result,COUNT(*) number,'SELECT * FROM z_newcreate_template_custom_field where parentType=''user_custom_data'' and neon_linkingId is null'
+FROM z_newcreate_template_custom_field where parentType='user_custom_data' and neon_linkingId is null;
+
+
+#37) user_custom_data linkingId is NULL
+INSERT INTO smoke_test_report_for_template (errorMsg,passFlag,errorCount,sqlStatement)
+SELECT 'user_custom_data linkingId is NULL',IF(COUNT(*)>0,'Fail','Pass') result,COUNT(*) number,'SELECT * FROM z_newcreate_template_custom_field z1 where parentType=''user_custom_data'' and linkingId is null'
+FROM z_newcreate_template_custom_field z1 where parentType='user_custom_data'  and linkingId is null;
+
+#38) user_custom_data linkingId is a companmy account
+INSERT INTO smoke_test_report_for_template (errorMsg,passFlag,errorCount,sqlStatement)
+SELECT 'user_custom_data linkingId is a companmy account',IF(COUNT(*)>0,'Fail','Pass') result,COUNT(*) number,'SELECT * FROM z_newcreate_template_custom_field z1 JOIN z_newcreate_template_basic_account_info z2 on z1.parentType=''user_custom_data'' and z2.masterRecord=1 and z1.linkingId=z2.mainAccountLinkingId and z1.linkingIdSeq=z2.accountSequence and z1.linkingIdSourceTable=z2.sourceTable WHERE IFNULL(z2.isCompanyAccount,z2.relatedIsCompany)=1'
+FROM z_newcreate_template_custom_field z1 JOIN z_newcreate_template_basic_account_info z2 on z1.parentType='user_custom_data' and z2.masterRecord=1 and z1.linkingId=z2.mainAccountLinkingId and z1.linkingIdSeq=z2.accountSequence and z1.linkingIdSourceTable=z2.sourceTable WHERE IFNULL(z2.isCompanyAccount,z2.relatedIsCompany)=1;
+
+#39) user_custom_data one-line/multiple-line/drop/radio have multiple different values of one user
+INSERT INTO smoke_test_report_for_template (errorMsg,passFlag,errorCount,sqlStatement)
+SELECT 'user_custom_data one-line/multiple-line/drop/radio have multiple different values of one user',IF(COUNT(*)>0,'Fail','Pass') result,COUNT(*) number,'SELECT * from z_newcreate_template_custom_field z1 where parentType=''user_custom_data'' and fieldDisplayType in(''O'',''M'',''R'',''D'')  AND length(trim(linkingId))>0 and length(trim(fieldDisplayName))>0 and length(trim(customFieldData))>0 GROUP BY linkingId,linkingIdSourceTable,linkingIdSeq,fieldDisplayName,fieldDisplayType,fieldGroupName HAVING count(DISTINCT customFieldData)>1'
+FROM (SELECT * from z_newcreate_template_custom_field z1 where parentType='user_custom_data' and fieldDisplayType in('O','M','R','D')  AND length(trim(linkingId))>0 and length(trim(fieldDisplayName))>0 and length(trim(customFieldData))>0
+GROUP BY linkingId,linkingIdSourceTable,linkingIdSeq,fieldDisplayName,fieldDisplayType,fieldGroupName HAVING count(DISTINCT customFieldData)>1 ORDER BY NULL)a;
+
+
+#40) user_custom_data drop/radio optionDescription may need parse and import as check custom
+INSERT INTO smoke_test_report_for_template (errorMsg,passFlag,errorCount,sqlStatement)
+SELECT 'user_custom_data drop/radio optionDescription may need parse and import as check custom',IF(COUNT(*)>0,'Fail','Pass') result,COUNT(*) number,'SELECT * FROM z_newcreate_template_custom_field z1 where parentType=''user_custom_data''  and fieldDisplayType in(''R'',''D'') and customFieldData REGEXP "[[.\\r.]]|,|;|[[.\\\\.]]|[[./.]]|\\\\|"'
+FROM z_newcreate_template_custom_field z1 where parentType='user_custom_data'  and fieldDisplayType in('R','D') and customFieldData REGEXP '[[.\r.]]|,|;|[[.\\.]]|[[./.]]|\\|';
+
+
+#41) user_custom_data There exist some one-line text custom fields that may be need to changed to dropdown display type. Please check again.
+INSERT INTO smoke_test_report_for_template (errorMsg,passFlag,errorCount,sqlStatement)
+SELECT "user_custom_data here exist some one-line text custom fields that may be need to changed to dropdown display type. Please check again.", IF(COUNT(*)>0, 'Warning', 'Pass'),count(*) ,'SELECT *  FROM (SELECT *,CONCAT_WS('''',fieldDisplayName,fieldDisplayType,fieldGroupName) as fieldId FROM z_newcreate_template_custom_field where parentType=''user_custom_data''  and fieldDisplayType in(''O'',''M'') GROUP BY ,fieldDisplayName,fieldDisplayType,fieldGroupName HAVING COUNT(DISTINCT customFieldData)<50) AS temp1 JOIN (SELECT *, COUNT(1),CONCAT_WS('''',fieldDisplayName,fieldDisplayType,fieldGroupName) as fieldId FROM z_newcreate_template_custom_field where parentType=''user_custom_data''  and fieldDisplayType in(''O'',''M'') GROUP BY fieldDisplayName,fieldDisplayType,fieldGroupName,customFieldData HAVING COUNT(1)>10) temp2 ON temp1.fieldId = temp2.fieldId GROUP BY temp1.fieldId'
+FROM (SELECT count(*) FROM (SELECT *,CONCAT_WS('''',fieldDisplayName,fieldDisplayType,fieldGroupName) as fieldId FROM z_newcreate_template_custom_field where parentType='user_custom_data'  and fieldDisplayType in('O','M')  GROUP BY fieldDisplayName,fieldDisplayType,fieldGroupName HAVING COUNT(DISTINCT customFieldData)<50 ORDER BY NULL) AS temp1 JOIN (SELECT *, COUNT(1),CONCAT_WS('''',fieldDisplayName,fieldDisplayType,fieldGroupName) as fieldId FROM z_newcreate_template_custom_field where parentType='user_custom_data'  and fieldDisplayType in('O','M') GROUP BY fieldDisplayName,fieldDisplayType,fieldGroupName,customFieldData HAVING COUNT(1)>10 ORDER BY NULL) temp2 ON temp1.fieldId = temp2.fieldId GROUP BY temp1.fieldId ORDER BY NULL) a;
+
+##company_custom_data
+#42) company_custom_data linkingId is invalid
+INSERT INTO smoke_test_report_for_template (errorMsg,passFlag,errorCount,sqlStatement)
+SELECT 'company_custom_data linkingId is invalid',IF(COUNT(*)>0,'Fail','Pass') result,COUNT(*) number,'SELECT * FROM z_newcreate_template_custom_field where parentType=''company_custom_data'' and neon_linkingId is null'
+FROM z_newcreate_template_custom_field where parentType='company_custom_data' and neon_linkingId is null;
+
+
+
+#43) company_custom_data linkingId is NULL
+INSERT INTO smoke_test_report_for_template (errorMsg,passFlag,errorCount,sqlStatement)
+SELECT 'company_custom_data linkingId is NULL',IF(COUNT(*)>0,'Fail','Pass') result,COUNT(*) number,'SELECT * FROM z_newcreate_template_custom_field z1 where parentType=''company_custom_data'' and linkingId is null'
+FROM z_newcreate_template_custom_field z1 where parentType='company_custom_data'  and linkingId is null;
+
+#44) company_custom_data linkingId is a individual account
+INSERT INTO smoke_test_report_for_template (errorMsg,passFlag,errorCount,sqlStatement)
+SELECT 'company_custom_data linkingId is a individual account',IF(COUNT(*)>0,'Fail','Pass') result,COUNT(*) number,'SELECT * FROM z_newcreate_template_custom_field z1 JOIN z_newcreate_template_basic_account_info z2 on z1.parentType=''company_custom_data'' and z2.masterRecord=1 and z1.linkingId=z2.mainAccountLinkingId and z1.linkingIdSeq=z2.accountSequence and z1.linkingIdSourceTable=z2.sourceTable WHERE IFNULL(z2.isCompanyAccount,z2.relatedIsCompany)=1'
+FROM z_newcreate_template_custom_field z1 JOIN z_newcreate_template_basic_account_info z2 on z1.parentType='company_custom_data' and z2.masterRecord=1 and z1.linkingId=z2.mainAccountLinkingId and z1.linkingIdSeq=z2.accountSequence and z1.linkingIdSourceTable=z2.sourceTable WHERE IFNULL(z2.isCompanyAccount,z2.relatedIsCompany)=0;
+
+
+#45) company_custom_data one-line/multiple-line/drop/radio have multiple different values of one company
+INSERT INTO smoke_test_report_for_template (errorMsg,passFlag,errorCount,sqlStatement)
+SELECT 'company_custom_data one-line/multiple-line/drop/radio have multiple different values of one company',IF(COUNT(*)>0,'Fail','Pass') result,COUNT(*) number,'SELECT * from z_newcreate_template_custom_field z1 where parentType=''company_custom_data'' and fieldDisplayType in(''O'',''M'',''R'',''D'')  AND length(trim(linkingId))>0 and length(trim(fieldDisplayName))>0 and length(trim(customFieldData))>0 GROUP BY linkingId,linkingIdSourceTable,linkingIdSeq,fieldDisplayName,fieldDisplayType,fieldGroupName HAVING count(DISTINCT customFieldData)>1'
+FROM (SELECT * from z_newcreate_template_custom_field z1 where parentType='company_custom_data' and fieldDisplayType in('O','M','R','D')  AND length(trim(linkingId))>0 and length(trim(fieldDisplayName))>0 and length(trim(customFieldData))>0
+GROUP BY linkingId,linkingIdSourceTable,linkingIdSeq,fieldDisplayName,fieldDisplayType,fieldGroupName HAVING count(DISTINCT customFieldData)>1 ORDER BY NULL)a;
+
+
+#46) company_custom_data drop/radio optionDescription may need parse and import as check custom
+INSERT INTO smoke_test_report_for_template (errorMsg,passFlag,errorCount,sqlStatement)
+SELECT 'company_custom_data drop/radio optionDescription may need parse and import as check custom',IF(COUNT(*)>0,'Fail','Pass') result,COUNT(*) number,'SELECT * FROM z_newcreate_template_custom_field z1 where parentType=''company_custom_data''  and fieldDisplayType in(''R'',''D'') and customFieldData REGEXP "[[.\\r.]]|,|;|[[.\\\\.]]|[[./.]]|\\\\|"'
+FROM z_newcreate_template_custom_field z1 where parentType='company_custom_data'  and fieldDisplayType in('R','D') and customFieldData REGEXP '[[.\r.]]|,|;|[[.\\.]]|[[./.]]|\\|';
+
+#47) company_custom_data There exist some one-line text custom fields that may be need to changed to dropdown display type. Please check again.
+INSERT INTO smoke_test_report_for_template (errorMsg,passFlag,errorCount,sqlStatement)
+SELECT "company_custom_data here exist some one-line text custom fields that may be need to changed to dropdown display type. Please check again.", IF(COUNT(*)>0, 'Warning', 'Pass'),count(*) ,'SELECT *  FROM (SELECT *,CONCAT_WS('''',fieldDisplayName,fieldDisplayType,fieldGroupName) as fieldId FROM z_newcreate_template_custom_field where parentType=''company_custom_data''  and fieldDisplayType in(''O'',''M'') GROUP BY fieldDisplayName,fieldDisplayType,fieldGroupName HAVING COUNT(DISTINCT customFieldData)<50) AS temp1 JOIN (SELECT *, COUNT(1),CONCAT_WS('''',fieldDisplayName,fieldDisplayType,fieldGroupName) as fieldId FROM z_newcreate_template_custom_field where parentType=''company_custom_data''  and fieldDisplayType in(''O'',''M'') GROUP BY fieldDisplayName,fieldDisplayType,fieldGroupName,customFieldData HAVING COUNT(1)>10) temp2 ON temp1.fieldId = temp2.fieldId GROUP BY temp1.fieldId'
+FROM (SELECT count(*) FROM (SELECT *,CONCAT_WS('''',fieldDisplayName,fieldDisplayType,fieldGroupName) as fieldId FROM z_newcreate_template_custom_field where parentType='company_custom_data'  and fieldDisplayType in('O','M')  GROUP BY fieldDisplayName,fieldDisplayType,fieldGroupName HAVING COUNT(DISTINCT customFieldData)<50 ORDER BY NULL) AS temp1 JOIN (SELECT *, COUNT(1),CONCAT_WS('''',fieldDisplayName,fieldDisplayType,fieldGroupName) as fieldId FROM z_newcreate_template_custom_field where parentType='company_custom_data'  and fieldDisplayType in('O','M') GROUP BY fieldDisplayName,fieldDisplayType,fieldGroupName,customFieldData HAVING COUNT(1)>10 ORDER BY NULL) temp2 ON temp1.fieldId = temp2.fieldId GROUP BY temp1.fieldId ORDER BY NULL) a;
+
+
+SELECT * FROM smoke_test_report_for_template  WHERE passFlag<>'Pass';

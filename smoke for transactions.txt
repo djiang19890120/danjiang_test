@@ -1,0 +1,1520 @@
+﻿ #############################################account
+DROP TABLE IF EXISTS smoke_test_report_for_template ;
+CREATE TABLE smoke_test_report_for_template  (stepId INT PRIMARY KEY auto_increment, errorCount int , errorMsg TEXT, passFlag VARCHAR(10),sqlStatement TEXT);
+
+###260
+
+ALTER TABLE z_newcreate_template_transaction_table ADD INDEX(parentTransactionLinkingId), ADD INDEX(parentTransactionLinkingIdSourceTable), ADD INDEX(parentTransactionLinkingSeq),ADD INDEX(parentTransactionType),
+																								 	 ADD INDEX(transactionLinkingId), ADD INDEX(transactionLinkingIdSourceTable), ADD INDEX(transactionSeq),ADD INDEX(transactionType);
+
+####248 transactgion date 不是标准时间
+INSERT INTO smoke_test_report_for_template (errorMsg,passFlag,errorCount,sqlStatement)
+SELECT 'transactionDate should be normal date',IF(COUNT(*)>0,'Fail','Pass') result,COUNT(*) number,'SELECT * from z_newcreate_template_transaction_table where length(trim(transactionDate))>0 and (IF(transactionDate like ''% %'', SUBSTRING_INDEX(transactionDate,'' '',1),transactionDate) not like ''____-__-__'' or IF(transactionDate like ''% %'', SUBSTRING_INDEX(transactionDate,'' '',1),transactionDate) like ''%-00%'' or IF(transactionDate like ''% %'', SUBSTRING_INDEX(transactionDate,'' '',1),transactionDate) like ''%0000%'')'
+from z_newcreate_template_transaction_table where length(trim(transactionDate))>0 and (IF(transactionDate like '% %', SUBSTRING_INDEX(transactionDate,' ',1),transactionDate) not like '____-__-__' or IF(transactionDate like '% %', SUBSTRING_INDEX(transactionDate,' ',1),transactionDate) like '%-00%' or IF(transactionDate like '% %', SUBSTRING_INDEX(transactionDate,' ',1),transactionDate) like '%0000%');
+
+####249 expectDate  不是标准时间
+INSERT INTO smoke_test_report_for_template (errorMsg,passFlag,errorCount,sqlStatement)
+SELECT 'expectDate should be normal date',IF(COUNT(*)>0,'Fail','Pass') result,COUNT(*) number,'SELECT * from z_newcreate_template_transaction_table where length(trim(expectDate))>0 and (IF(expectDate like ''% %'', SUBSTRING_INDEX(expectDate,'' '',1),expectDate) not like ''____-__-__'' or IF(expectDate like ''% %'', SUBSTRING_INDEX(expectDate,'' '',1),expectDate) like ''%-00%'' or IF(expectDate like ''% %'', SUBSTRING_INDEX(expectDate,'' '',1),expectDate) like ''%0000%'')'
+from z_newcreate_template_transaction_table where length(trim(expectDate))>0 and (IF(expectDate like '% %', SUBSTRING_INDEX(expectDate,' ',1),expectDate) not like '____-__-__' or IF(expectDate like '% %', SUBSTRING_INDEX(expectDate,' ',1),expectDate) like '%-00%' or IF(expectDate like '% %', SUBSTRING_INDEX(expectDate,' ',1),expectDate) like '%0000%');
+
+####250 receivedDate  不是标准时间
+INSERT INTO smoke_test_report_for_template (errorMsg,passFlag,errorCount,sqlStatement)
+SELECT 'receivedDate should be normal date',IF(COUNT(*)>0,'Fail','Pass') result,COUNT(*) number,'SELECT * from z_newcreate_template_transaction_table where length(trim(receivedDate))>0 and receivedDate<>''1'' and (IF(receivedDate like ''% %'', SUBSTRING_INDEX(receivedDate,'' '',1),receivedDate) not like ''____-__-__'' or IF(receivedDate like ''% %'', SUBSTRING_INDEX(receivedDate,'' '',1),receivedDate) like ''%-00%'' or IF(receivedDate like ''% %'', SUBSTRING_INDEX(receivedDate,'' '',1),receivedDate) like ''%0000%'')'
+from z_newcreate_template_transaction_table where length(trim(receivedDate))>0 and receivedDate<>'1'  and (IF(receivedDate like '% %', SUBSTRING_INDEX(receivedDate,' ',1),receivedDate) not like '____-__-__' or IF(receivedDate like '% %', SUBSTRING_INDEX(receivedDate,' ',1),receivedDate) like '%-00%' or IF(receivedDate like '% %', SUBSTRING_INDEX(receivedDate,' ',1),receivedDate) like '%0000%');
+
+
+####251 cardExpirationDate  不是标准时间
+INSERT INTO smoke_test_report_for_template (errorMsg,passFlag,errorCount,sqlStatement)
+SELECT 'cardExpirationDate should be normal date',IF(COUNT(*)>0,'Fail','Pass') result,COUNT(*) number,'SELECT * from z_newcreate_template_transaction_table where length(trim(cardExpirationDate))>0 and (IF(cardExpirationDate like ''% %'', SUBSTRING_INDEX(cardExpirationDate,'' '',1),cardExpirationDate) not like ''____-__-__'' or IF(cardExpirationDate like ''% %'', SUBSTRING_INDEX(cardExpirationDate,'' '',1),cardExpirationDate) like ''%-00%'' or IF(cardExpirationDate like ''% %'', SUBSTRING_INDEX(cardExpirationDate,'' '',1),cardExpirationDate) like ''%0000%'')'
+from z_newcreate_template_transaction_table where length(trim(cardExpirationDate))>0 and (IF(cardExpirationDate like '% %', SUBSTRING_INDEX(cardExpirationDate,' ',1),cardExpirationDate) not like '____-__-__' or IF(cardExpirationDate like '% %', SUBSTRING_INDEX(cardExpirationDate,' ',1),cardExpirationDate) like '%-00%' or IF(cardExpirationDate like '% %', SUBSTRING_INDEX(cardExpirationDate,' ',1),cardExpirationDate) like '%0000%');
+
+####252 createTime  不是标准时间
+INSERT INTO smoke_test_report_for_template (errorMsg,passFlag,errorCount,sqlStatement)
+SELECT 'createTime should be normal date',IF(COUNT(*)>0,'Fail','Pass') result,COUNT(*) number,'SELECT * from z_newcreate_template_transaction_table where length(trim(createTime))>0 and (IF(createTime like ''% %'', SUBSTRING_INDEX(createTime,'' '',1),createTime) not like ''____-__-__'' or IF(createTime like ''% %'', SUBSTRING_INDEX(createTime,'' '',1),createTime) like ''%-00%'' or IF(createTime like ''% %'', SUBSTRING_INDEX(createTime,'' '',1),createTime) like ''%0000%'')'
+from z_newcreate_template_transaction_table where length(trim(createTime))>0 and (IF(createTime like '% %', SUBSTRING_INDEX(createTime,' ',1),createTime) not like '____-__-__' or IF(createTime like '% %', SUBSTRING_INDEX(createTime,' ',1),createTime) like '%-00%' or IF(createTime like '% %', SUBSTRING_INDEX(createTime,' ',1),createTime) like '%0000%');
+
+####253 lastModifyTime  不是标准时间
+INSERT INTO smoke_test_report_for_template (errorMsg,passFlag,errorCount,sqlStatement)
+SELECT 'lastModifyTime should be normal date',IF(COUNT(*)>0,'Fail','Pass') result,COUNT(*) number,'SELECT * from z_newcreate_template_transaction_table where length(trim(lastModifyTime))>0 and (IF(lastModifyTime like ''% %'', SUBSTRING_INDEX(lastModifyTime,'' '',1),lastModifyTime) not like ''____-__-__'' or IF(lastModifyTime like ''% %'', SUBSTRING_INDEX(lastModifyTime,'' '',1),lastModifyTime) like ''%-00%'' or IF(lastModifyTime like ''% %'', SUBSTRING_INDEX(lastModifyTime,'' '',1),lastModifyTime) like ''%0000%'')'
+from z_newcreate_template_transaction_table where length(trim(lastModifyTime))>0 and (IF(lastModifyTime like '% %', SUBSTRING_INDEX(lastModifyTime,' ',1),lastModifyTime) not like '____-__-__' or IF(lastModifyTime like '% %', SUBSTRING_INDEX(lastModifyTime,' ',1),lastModifyTime) like '%-00%' or IF(lastModifyTime like '% %', SUBSTRING_INDEX(lastModifyTime,' ',1),lastModifyTime) like '%0000%');
+
+
+####254 allocationStartDate  不是标准时间
+INSERT INTO smoke_test_report_for_template (errorMsg,passFlag,errorCount,sqlStatement)
+SELECT 'allocationStartDate should be normal date',IF(COUNT(*)>0,'Fail','Pass') result,COUNT(*) number,'SELECT * from z_newcreate_template_allocation where length(trim(allocationStartDate))>0 and (IF(allocationStartDate like ''% %'', SUBSTRING_INDEX(allocationStartDate,'' '',1),allocationStartDate) not like ''____-__-__'' or IF(allocationStartDate like ''% %'', SUBSTRING_INDEX(allocationStartDate,'' '',1),allocationStartDate) like ''%-00%'' or IF(allocationStartDate like ''% %'', SUBSTRING_INDEX(allocationStartDate,'' '',1),allocationStartDate) like ''%0000%'')'
+from z_newcreate_template_allocation where length(trim(allocationStartDate))>0 and (IF(allocationStartDate like '% %', SUBSTRING_INDEX(allocationStartDate,' ',1),allocationStartDate) not like '____-__-__' or IF(allocationStartDate like '% %', SUBSTRING_INDEX(allocationStartDate,' ',1),allocationStartDate) like '%-00%' or IF(allocationStartDate like '% %', SUBSTRING_INDEX(allocationStartDate,' ',1),allocationStartDate) like '%0000%');
+
+####255 allocationEndDate  不是标准时间
+INSERT INTO smoke_test_report_for_template (errorMsg,passFlag,errorCount,sqlStatement)
+SELECT 'allocationEndDate should be normal date',IF(COUNT(*)>0,'Fail','Pass') result,COUNT(*) number,'SELECT * from z_newcreate_template_allocation where length(trim(allocationEndDate))>0 and (IF(allocationEndDate like ''% %'', SUBSTRING_INDEX(allocationEndDate,'' '',1),allocationEndDate) not like ''____-__-__'' or IF(allocationEndDate like ''% %'', SUBSTRING_INDEX(allocationEndDate,'' '',1),allocationEndDate) like ''%-00%'' or IF(allocationEndDate like ''% %'', SUBSTRING_INDEX(allocationEndDate,'' '',1),allocationEndDate) like ''%0000%'')'
+from z_newcreate_template_allocation where length(trim(allocationEndDate))>0 and (IF(allocationEndDate like '% %', SUBSTRING_INDEX(allocationEndDate,' ',1),allocationEndDate) not like '____-__-__' or IF(allocationEndDate like '% %', SUBSTRING_INDEX(allocationEndDate,' ',1),allocationEndDate) like '%-00%' or IF(allocationEndDate like '% %', SUBSTRING_INDEX(allocationEndDate,' ',1),allocationEndDate) like '%0000%');
+
+
+####256 eventStartDate  不是标准时间
+INSERT INTO smoke_test_report_for_template (errorMsg,passFlag,errorCount,sqlStatement)
+SELECT 'eventStartDate should be normal date',IF(COUNT(*)>0,'Fail','Pass') result,COUNT(*) number,'SELECT * from z_newcreate_template_event where length(trim(eventStartDate))>0 and (IF(eventStartDate like ''% %'', SUBSTRING_INDEX(eventStartDate,'' '',1),eventStartDate) not like ''____-__-__'' or IF(eventStartDate like ''% %'', SUBSTRING_INDEX(eventStartDate,'' '',1),eventStartDate) like ''%-00%'' or IF(eventStartDate like ''% %'', SUBSTRING_INDEX(eventStartDate,'' '',1),eventStartDate) like ''%0000%'')'
+from z_newcreate_template_event where length(trim(eventStartDate))>0 and (IF(eventStartDate like '% %', SUBSTRING_INDEX(eventStartDate,' ',1),eventStartDate) not like '____-__-__' or IF(eventStartDate like '% %', SUBSTRING_INDEX(eventStartDate,' ',1),eventStartDate) like '%-00%' or IF(eventStartDate like '% %', SUBSTRING_INDEX(eventStartDate,' ',1),eventStartDate) like '%0000%');
+
+####257 eventEndDate  不是标准时间
+INSERT INTO smoke_test_report_for_template (errorMsg,passFlag,errorCount,sqlStatement)
+SELECT 'eventEndDate should be normal date',IF(COUNT(*)>0,'Fail','Pass') result,COUNT(*) number,'SELECT * from z_newcreate_template_event where length(trim(eventEndDate))>0 and (IF(eventEndDate like ''% %'', SUBSTRING_INDEX(eventEndDate,'' '',1),eventEndDate) not like ''____-__-__'' or IF(eventEndDate like ''% %'', SUBSTRING_INDEX(eventEndDate,'' '',1),eventEndDate) like ''%-00%'' or IF(eventEndDate like ''% %'', SUBSTRING_INDEX(eventEndDate,'' '',1),eventEndDate) like ''%0000%'')'
+from z_newcreate_template_event where length(trim(eventEndDate))>0 and (IF(eventEndDate like '% %', SUBSTRING_INDEX(eventEndDate,' ',1),eventEndDate) not like '____-__-__' or IF(eventEndDate like '% %', SUBSTRING_INDEX(eventEndDate,' ',1),eventEndDate) like '%-00%' or IF(eventEndDate like '% %', SUBSTRING_INDEX(eventEndDate,' ',1),eventEndDate) like '%0000%');
+
+####258 registrationCloseDate  不是标准时间
+INSERT INTO smoke_test_report_for_template (errorMsg,passFlag,errorCount,sqlStatement)
+SELECT 'registrationCloseDate should be normal date',IF(COUNT(*)>0,'Fail','Pass') result,COUNT(*) number,'SELECT * from z_newcreate_template_event where length(trim(registrationCloseDate))>0 and (IF(registrationCloseDate like ''% %'', SUBSTRING_INDEX(registrationCloseDate,'' '',1),registrationCloseDate) not like ''____-__-__'' or IF(registrationCloseDate like ''% %'', SUBSTRING_INDEX(registrationCloseDate,'' '',1),registrationCloseDate) like ''%-00%'' or IF(registrationCloseDate like ''% %'', SUBSTRING_INDEX(registrationCloseDate,'' '',1),registrationCloseDate) like ''%0000%'')'
+from z_newcreate_template_event where length(trim(registrationCloseDate))>0 and (IF(registrationCloseDate like '% %', SUBSTRING_INDEX(registrationCloseDate,' ',1),registrationCloseDate) not like '____-__-__' or IF(registrationCloseDate like '% %', SUBSTRING_INDEX(registrationCloseDate,' ',1),registrationCloseDate) like '%-00%' or IF(registrationCloseDate like '% %', SUBSTRING_INDEX(registrationCloseDate,' ',1),registrationCloseDate) like '%0000%');
+
+####259 membershipStartDate  不是标准时间
+INSERT INTO smoke_test_report_for_template (errorMsg,passFlag,errorCount,sqlStatement)
+SELECT 'membershipStartDate should be normal date',IF(COUNT(*)>0,'Fail','Pass') result,COUNT(*) number,'SELECT * from z_newcreate_template_event where length(trim(membershipStartDate))>0 and (IF(membershipStartDate like ''% %'', SUBSTRING_INDEX(membershipStartDate,'' '',1),membershipStartDate) not like ''____-__-__'' or IF(membershipStartDate like ''% %'', SUBSTRING_INDEX(membershipStartDate,'' '',1),membershipStartDate) like ''%-00%'' or IF(membershipStartDate like ''% %'', SUBSTRING_INDEX(membershipStartDate,'' '',1),membershipStartDate) like ''%0000%'')'
+from z_newcreate_membership_enrollment where length(trim(membershipStartDate))>0 and (IF(membershipStartDate like '% %', SUBSTRING_INDEX(membershipStartDate,' ',1),membershipStartDate) not like '____-__-__' or IF(membershipStartDate like '% %', SUBSTRING_INDEX(membershipStartDate,' ',1),membershipStartDate) like '%-00%' or IF(membershipStartDate like '% %', SUBSTRING_INDEX(membershipStartDate,' ',1),membershipStartDate) like '%0000%');
+
+
+####260 membershipEndDate  不是标准时间
+INSERT INTO smoke_test_report_for_template (errorMsg,passFlag,errorCount,sqlStatement)
+SELECT 'membershipEndDate should be normal date',IF(COUNT(*)>0,'Fail','Pass') result,COUNT(*) number,'SELECT * from z_newcreate_template_event where length(trim(membershipEndDate))>0 and (IF(membershipEndDate like ''% %'', SUBSTRING_INDEX(membershipEndDate,'' '',1),membershipEndDate) not like ''____-__-__'' or IF(membershipEndDate like ''% %'', SUBSTRING_INDEX(membershipEndDate,'' '',1),membershipEndDate) like ''%-00%'' or IF(membershipEndDate like ''% %'', SUBSTRING_INDEX(membershipEndDate,'' '',1),membershipEndDate) like ''%0000%'')'
+from z_newcreate_membership_enrollment where length(trim(membershipEndDate))>0 and (IF(membershipEndDate like '% %', SUBSTRING_INDEX(membershipEndDate,' ',1),membershipEndDate) not like '____-__-__' or IF(membershipEndDate like '% %', SUBSTRING_INDEX(membershipEndDate,' ',1),membershipEndDate) like '%-00%' or IF(membershipEndDate like '% %', SUBSTRING_INDEX(membershipEndDate,' ',1),membershipEndDate) like '%0000%');
+
+
+####################################
+#244) both product_name and product_linkId are populated
+INSERT INTO smoke_test_report_for_template (errorMsg,passFlag,errorCount,sqlStatement)
+SELECT 'both product_name and product_linkId are populated',IF(COUNT(*)>0,'Fail','Pass') result,COUNT(*) number,'SELECT * from z_newcreate_template_transaction_table where transactionType in(''product'') and length(trim(productLinkingId))>0 and length(trim(original_product_name))>0'
+from z_newcreate_template_transaction_table where transactionType in('product') and length(trim(productLinkingId))>0 and length(trim(original_product_name))>0;
+
+
+#245) both membership_level and membership_linkId are populated
+INSERT INTO smoke_test_report_for_template (errorMsg,passFlag,errorCount,sqlStatement)
+SELECT 'both membership_level and membership_linkId are populated',IF(COUNT(*)>0,'Fail','Pass') result,COUNT(*) number,'SELECT * from z_newcreate_template_transaction_table where transactionType in(''membership'') and length(trim(membershipLinkingId))>0 and length(trim(original_membership_level))>0;'
+from z_newcreate_template_transaction_table where transactionType in('membership') and length(trim(membershipLinkingId))>0 and length(trim(original_membership_level))>0;
+
+
+#246) both eventname and event_linkId are populated
+INSERT INTO smoke_test_report_for_template (errorMsg,passFlag,errorCount,sqlStatement)
+SELECT 'both eventname and event_linkId are populated',IF(COUNT(*)>0,'Fail','Pass') result,COUNT(*) number,'SELECT * from z_newcreate_template_transaction_table where transactionType in(''event registration'') and length(trim(eventLinkingId))>0 and length(trim(eventName))>0'
+from z_newcreate_template_transaction_table where transactionType in('event registration') and length(trim(eventLinkingId))>0 and length(trim(eventName))>0;
+
+#247)一个 shoppingCartLinkingId 下，transactionStatus 值不同
+INSERT INTO smoke_test_report_for_template (errorMsg,passFlag,errorCount,sqlStatement)
+SELECT 'multiple transactionStatus in same shippingHandlingCost',IF(COUNT(*)>0,'Fail','Pass') result,COUNT(*) number,'SELECT * from z_newcreate_template_transaction_table where shoppingCartLinkingId in(SELECT shoppingCartLinkingId from z_newcreate_template_transaction_table where length(trim(shoppingCartLinkingId))>0  GROUP BY shoppingCartLinkingId HAVING count(DISTINCT IFNULL(transactionStatus,''Succeed''))>1)'
+from  (SELECT * from z_newcreate_template_transaction_table where length(trim(shoppingCartLinkingId))>0  GROUP BY shoppingCartLinkingId HAVING count(DISTINCT IFNULL(transactionStatus,'Succeed'))>1) a;
+
+#248) shoppingCartLinkingId 重复 
+INSERT INTO smoke_test_report_for_template (errorMsg,passFlag,errorCount,sqlStatement)
+SELECT 'duplicate shoppingCartLinkingId',IF(COUNT(*)>0,'Fail','Pass') result,COUNT(*),'SELECT * FROM z_newcreate_template_transaction_table WHERE length(trim(transactionLinkingId))>0 and transactionType in(''pledge'',''pledgepayment'',''match pledge'',''donation'',''payment'',''membership'',''event registration'',''product'',''soft credit'',''installment'') GROUP BY transactionLinkingId,transactionLinkingIdSourceTable,transactionSeq,sourceTableRowId HAVING count(*)>1 ' FROM (SELECT 'Blank transactionLinkingId in transaction' description,IF(COUNT(*)>0,'Fail','Pass') result,COUNT(*) number
+FROM z_newcreate_template_transaction_table WHERE length(trim(transactionLinkingId))>0 and transactionType in('pledge','pledgepayment','match pledge','donation','payment','membership','event registration','product','soft credit','installment') GROUP BY transactionLinkingId,transactionLinkingIdSourceTable,transactionSeq,sourceTableRowId HAVING count(*)>1 ) a;
+
+
+#################################################################################
+#1)一个 shoppingCartLinkingId 下，shoppingCartTotalCharge 值不同
+INSERT INTO smoke_test_report_for_template (errorMsg,passFlag,errorCount,sqlStatement)
+SELECT 'multiple shoppingCartTotalCharge in same shoppingCartLinkingId',IF(COUNT(*)>0,'Fail','Pass') result,COUNT(*) number,'SELECT * from z_newcreate_template_transaction_table where length(trim(shoppingCartLinkingId))>0 GROUP BY shoppingCartLinkingId HAVING count(DISTINCT IFNULL(shoppingCartTotalCharge,''''))>1'
+from (SELECT * from z_newcreate_template_transaction_table where length(trim(shoppingCartLinkingId))>0 GROUP BY shoppingCartLinkingId HAVING count(DISTINCT IFNULL(shoppingCartTotalCharge,''))>1) a;
+
+
+#2)一个 shoppingCartLinkingId 下，transactionDate 值不同
+INSERT INTO smoke_test_report_for_template (errorMsg,passFlag,errorCount,sqlStatement)
+SELECT 'multiple transactionDate in same shoppingCartLinkingId',IF(COUNT(*)>0,'Fail','Pass') result,COUNT(*) number,'SELECT * from z_newcreate_template_transaction_table where length(trim(shoppingCartLinkingId))>0  GROUP BY shoppingCartLinkingId HAVING count(DISTINCT IFNULL(transactionDate,''''))>1'
+from (SELECT * from z_newcreate_template_transaction_table where length(trim(shoppingCartLinkingId))>0 GROUP BY shoppingCartLinkingId HAVING count(DISTINCT IFNULL(transactionDate,''))>1) a;
+
+#3)一个 shoppingCartLinkingId 下，accountId 值不同
+INSERT INTO smoke_test_report_for_template (errorMsg,passFlag,errorCount,sqlStatement)
+SELECT 'multiple accountId in same shoppingCartLinkingId',IF(COUNT(*)>0,'Fail','Pass') result,COUNT(*) number,'SELECT * from z_newcreate_template_transaction_table where length(trim(shoppingCartLinkingId))>0  GROUP BY shoppingCartLinkingId HAVING count(DISTINCT IFNULL(accountId,''''))>1'
+from (SELECT * from z_newcreate_template_transaction_table where length(trim(shoppingCartLinkingId))>0  GROUP BY shoppingCartLinkingId HAVING count(DISTINCT IFNULL(accountId,''))>1) a;
+
+#235)一个 shoppingCartLinkingId 下，tax 值不同
+INSERT INTO smoke_test_report_for_template (errorMsg,passFlag,errorCount,sqlStatement)
+SELECT 'multiple tax in same shoppingCartLinkingId',IF(COUNT(*)>0,'Fail','Pass') result,COUNT(*) number,'SELECT * from z_newcreate_template_transaction_table where length(trim(shoppingCartLinkingId))>0  GROUP BY shoppingCartLinkingId HAVING count(DISTINCT IFNULL(tax,''''))>1'
+from (SELECT * from z_newcreate_template_transaction_table where length(trim(shoppingCartLinkingId))>0  GROUP BY shoppingCartLinkingId HAVING count(DISTINCT IFNULL(tax,''))>1) a;
+
+#236)一个 shoppingCartLinkingId 下，shippingHandlingCost 值不同
+INSERT INTO smoke_test_report_for_template (errorMsg,passFlag,errorCount,sqlStatement)
+SELECT 'multiple shippingHandlingCost in same shoppingCartLinkingId',IF(COUNT(*)>0,'Fail','Pass') result,COUNT(*) number,'SELECT * from z_newcreate_template_transaction_table where length(trim(shoppingCartLinkingId))>0  GROUP BY shoppingCartLinkingId HAVING count(DISTINCT IFNULL(shippingHandlingCost,''''))>1'
+from (SELECT * from z_newcreate_template_transaction_table where length(trim(shoppingCartLinkingId))>0  GROUP BY shoppingCartLinkingId HAVING count(DISTINCT IFNULL(shippingHandlingCost,''))>1) a;
+
+
+
+#238) One shopping cart could not have the store puchases that share the same event
+INSERT INTO smoke_test_report_for_template (errorMsg,passFlag,errorCount,sqlStatement)
+SELECT 'One shopping cart could not have the store puchases that share the same event',IF(COUNT(*)>0,'Fail','Pass') result,COUNT(*) number,'SELECT * from z_newcreate_template_transaction_table where length(trim(shoppingCartLinkingId))>0 and length(trim(eventId))>0  GROUP BY shoppingCartLinkingId,eventId HAVING count(*)>1'
+from (SELECT * from z_newcreate_template_transaction_table where length(trim(shoppingCartLinkingId))>0 and length(trim(eventId))>0  GROUP BY shoppingCartLinkingId,eventId HAVING count(*)>1) a;
+
+#239) One shopping cart could not have the store puchases that share the same membershipTerm
+INSERT INTO smoke_test_report_for_template (errorMsg,passFlag,errorCount,sqlStatement)
+SELECT 'One shopping cart could not have the store puchases that share the same membershipTerm',IF(COUNT(*)>0,'Fail','Pass') result,COUNT(*) number,'SELECT * from z_newcreate_template_transaction_table where length(trim(shoppingCartLinkingId))>0 and length(trim(membershipId))>0  GROUP BY shoppingCartLinkingId,membershipId,membershiptermUnit,membershiptermDuration,membershipEnrollmentType HAVING count(*)>1'
+from (SELECT * from z_newcreate_template_transaction_table where length(trim(shoppingCartLinkingId))>0 and length(trim(membershipId))>0  GROUP BY shoppingCartLinkingId,membershipId,membershiptermUnit,membershiptermDuration,membershipEnrollmentType HAVING count(*)>1) a;
+
+#240) One shopping cart could not have the store puchases that share the same produtct and the same option
+INSERT INTO smoke_test_report_for_template (errorMsg,passFlag,errorCount,sqlStatement)
+SELECT 'One shopping cart could not have the store puchases that share the same produtct and the same option',IF(COUNT(*)>0,'Fail','Pass') result,COUNT(*) number,'SELECT * from z_newcreate_template_transaction_table where length(trim(shoppingCartLinkingId))>0 and length(trim(membershipId))>0  GROUP BY shoppingCartLinkingId,membershipId,optionId1,optionId2,optionId3 HAVING count(*)>1'
+from (SELECT * from z_newcreate_template_transaction_table where length(trim(shoppingCartLinkingId))>0 and length(trim(productId))>0  GROUP BY shoppingCartLinkingId,productId,optionId1,optionId2,optionId3 HAVING count(*)>1) a;
+
+
+
+#241) In-Kind donation can not share the same shopping_cart whti other transaction
+INSERT INTO smoke_test_report_for_template (errorMsg,passFlag,errorCount,sqlStatement)
+SELECT 'One shopping cart could not have the store puchases that share the same produtct and the same option',IF(COUNT(*)>0,'Fail','Pass') result,COUNT(*) number,'SELECT * from z_newcreate_template_transaction_table where length(trim(shoppingCartLinkingId))>0 and tenderType<=>''In-Kind'' and transactionType in(''donation'',''pledge payment'')  GROUP BY shoppingCartLinkingId HAVING count(*)>1'
+from (SELECT * from z_newcreate_template_transaction_table where length(trim(shoppingCartLinkingId))>0 and tenderType<=>'In-Kind' and transactionType in('donation','pledge payment')  GROUP BY shoppingCartLinkingId HAVING count(*)>1) a;
+
+#242) Batch Number is populated but not donation
+INSERT INTO smoke_test_report_for_template (errorMsg,passFlag,errorCount,sqlStatement)
+SELECT 'Batch Number is populated but not donation',IF(COUNT(*)>0,'Fail','Pass') result,COUNT(*) number,'SELECT * FROM z_newcreate_template_transaction_table WHERE length(trim(transactionLinkingId))>0 and length(trim(transactionType))>0 and transactionType not in(''pledgepayment'',''donation'') and length(trim(batchNumber))>0'
+FROM z_newcreate_template_transaction_table WHERE length(trim(transactionLinkingId))>0 and length(trim(transactionType))>0 and transactionType not in('pledgepayment','donation') and length(trim(batchNumber))>0;
+
+#243) cardLast4Digit 包含文字或者长度不等于4
+
+
+
+#4)账号关联不上
+INSERT INTO smoke_test_report_for_template (errorMsg,passFlag,errorCount,sqlStatement)
+SELECT a.description,a.result,number,'SELECT * FROM z_newcreate_template_transaction_table WHERE length(trim(accountLinkingId))>0 and accountId is null' FROM (SELECT 'Invalid link account id in transaction' description,IF(COUNT(*)>0,'Fail','Pass') result,COUNT(*) number
+FROM z_newcreate_template_transaction_table WHERE length(trim(accountLinkingId))>0 and accountId is null) a;
+
+#5) accountlinkgId 为空
+INSERT INTO smoke_test_report_for_template (errorMsg,passFlag,errorCount,sqlStatement)
+SELECT a.description,a.result,number,'SELECT * FROM z_newcreate_template_transaction_table WHERE transactionType in(''pledge'',''pledgepayment'',''match pledge'',''donation'',''payment'',''membership'',''event registration'',''product'') accountLinkingId is null' FROM (SELECT 'Blank link account id in transaction' description,IF(COUNT(*)>0,'Fail','Pass') result,COUNT(*) number
+FROM z_newcreate_template_transaction_table WHERE transactionType in('pledge','pledgepayment','match pledge','donation','payment','membership','event registration','product') and accountLinkingId is null) a;
+
+######################################总体的
+#6)transactionLinkingId 为空
+
+INSERT INTO smoke_test_report_for_template (errorMsg,passFlag,errorCount,sqlStatement)
+SELECT a.description,a.result,number,'SELECT * FROM z_newcreate_template_transaction_table WHERE transactionType in(''pledge'',''pledgepayment'',''match pledge'',''donation'',''payment'',''membership'',''event registration'',''product'',''installment'') and transactionLinkingId is null' FROM (SELECT 'Blank transactionLinkingId in transaction' description,IF(COUNT(*)>0,'Fail','Pass') result,COUNT(*) number
+FROM z_newcreate_template_transaction_table WHERE transactionType in('pledge','pledgepayment','match pledge','donation','payment','membership','event registration','product','installment') and transactionLinkingId is null) a;
+
+#7)transactionLinkingId 重复
+INSERT INTO smoke_test_report_for_template (errorMsg,passFlag,errorCount,sqlStatement)
+SELECT 'duplicate transactionLinkingId in transaction',IF(COUNT(*)>0,'Fail','Pass') result,COUNT(*),'SELECT * FROM z_newcreate_template_transaction_table WHERE length(trim(transactionLinkingId))>0 and transactionType in(''pledge'',''pledgepayment'',''match pledge'',''donation'',''payment'',''membership'',''event registration'',''product'',''soft credit'',''installment'') GROUP BY transactionLinkingId,transactionLinkingIdSourceTable,transactionSeq HAVING count(*)>1 ' FROM (SELECT 'Blank transactionLinkingId in transaction' description,IF(COUNT(*)>0,'Fail','Pass') result,COUNT(*) number
+FROM z_newcreate_template_transaction_table WHERE length(trim(transactionLinkingId))>0 and transactionType in('pledge','pledgepayment','match pledge','donation','payment','membership','event registration','product','soft credit','installment') GROUP BY transactionLinkingId,transactionLinkingIdSourceTable,transactionSeq HAVING count(*)>1 ) a;
+
+
+
+###243 transactionLinkingId 重复 但是大小写不一样
+INSERT INTO smoke_test_report_for_template (errorMsg,passFlag,errorCount,sqlStatement)
+SELECT 'duplicate transactionLinkingId but different binary  in transaction',IF(COUNT(*)>0,'Fail','Pass') result,COUNT(*),'SELECT * FROM z_newcreate_template_transaction_table WHERE length(trim(transactionLinkingId))>0 and transactionType in(''pledge'',''pledgepayment'',''match pledge'',''donation'',''payment'',''membership'',''event registration'',''product'',''soft credit'',''installment'') GROUP BY transactionLinkingId,transactionLinkingIdSourceTable,transactionSeq HAVING count(*)>1 and count(DISTINCT BINARY transactionLinkingId)>1 ' FROM (SELECT 'duplicate transactionLinkingId in transaction' description,IF(COUNT(*)>0,'Fail','Pass') result,COUNT(*) number
+FROM z_newcreate_template_transaction_table WHERE length(trim(transactionLinkingId))>0 and transactionType in('pledge','pledgepayment','match pledge','donation','payment','membership','event registration','product','soft credit','installment') GROUP BY transactionLinkingId,transactionLinkingIdSourceTable,transactionSeq HAVING count(*)>1 and count(DISTINCT BINARY transactionLinkingId)>1 ) a;
+
+
+
+
+#8)transactionLinkingId 重复 但是人,钱和时间不相同
+INSERT INTO smoke_test_report_for_template (errorMsg,passFlag,errorCount,sqlStatement)
+SELECT 'duplicate transactionLinkingId in transaction with different account,date,amount',IF(COUNT(*)>0,'Fail','Pass') result,COUNT(*),'SELECT * FROM z_newcreate_template_transaction_table WHERE length(trim(transactionLinkingId))>0 and transactionType in(''pledge'',''pledgepayment'',''match pledge'',''donation'',''payment'',''membership'',''event registration'',''product'',''soft credit'',''installment'') GROUP BY transactionLinkingId,transactionLinkingIdSourceTable,transactionSeq HAVING count(DISTINCT CONCAT(accountLinkingId,accountLinkingSeq,accountLinkingIdSourceTable,transactionAmount,transactionDate))>1 ' FROM (SELECT 'Blank transactionLinkingId in transaction' description,IF(COUNT(*)>0,'Fail','Pass') result,COUNT(*) number
+FROM z_newcreate_template_transaction_table WHERE length(trim(transactionLinkingId))>0 and transactionType in('pledge','pledgepayment','match pledge','donation','payment','membership','event registration','product','soft credit','installment') GROUP BY transactionLinkingId,transactionLinkingIdSourceTable,transactionSeq HAVING count(DISTINCT CONCAT(accountLinkingId,accountLinkingSeq,accountLinkingIdSourceTable,transactionAmount,transactionDate))>1 ) a;
+
+#9)parentTransactionLinkingId is invalied
+INSERT INTO smoke_test_report_for_template (errorMsg,passFlag,errorCount,sqlStatement)
+SELECT 'invalid parentTransactionLinkingId',IF(COUNT(*)>0,'Fail','Pass') result,COUNT(*) number,'SELECT * FROM z_newcreate_template_transaction_table WHERE length(trim(parentTransactionLinkingId))>0 and(parentTransactionLinkingId,parentTransactionLinkingIdSourceTable,parentTransactionLinkingSeq) not in (SELECT transactionLinkingId,transactionLinkingIdSourceTable,transactionSeq from z_newcreate_template_transaction_table WHERE transactionLinkingId IS NOT NULL)'
+FROM z_newcreate_template_transaction_table WHERE length(trim(parentTransactionLinkingId))>0 and(parentTransactionLinkingId,parentTransactionLinkingIdSourceTable,parentTransactionLinkingSeq)
+ not in (SELECT transactionLinkingId,transactionLinkingIdSourceTable,transactionSeq from z_newcreate_template_transaction_table WHERE transactionLinkingId IS NOT NULL);
+
+#10)parentTransactionLinkingId 关联的 transaction 的type 和 parentTransactionType 不一样
+INSERT INTO smoke_test_report_for_template (errorMsg,passFlag,errorCount,sqlStatement)
+SELECT 'different of parentTransactionType with the type of parentTransactionLinkingId row',IF(COUNT(*)>0,'Fail','Pass') result,COUNT(*) number,'SELECT * from z_newcreate_template_transaction_table zjd, z_newcreate_template_transaction_table zj  where (zjd.parentTransactionLinkingId=zj.transactionLinkingId and zjd.parentTransactionLinkingIdSourceTable=zj.transactionLinkingIdSourceTable and zjd.parentTransactionLinkingSeq=zj.transactionSeq) and zjd.parentTransactionType<>zj.transactionType'
+from z_newcreate_template_transaction_table zjd, z_newcreate_template_transaction_table zj  where (zjd.parentTransactionLinkingId=zj.transactionLinkingId and zjd.parentTransactionLinkingIdSourceTable=zj.transactionLinkingIdSourceTable and zjd.parentTransactionLinkingSeq=zj.transactionSeq) and zjd.parentTransactionType<>zj.transactionType;
+
+
+
+#11) transactionStatus 不是“Succeed”,Pending,Cancelled
+INSERT INTO smoke_test_report_for_template (errorMsg,passFlag,errorCount,sqlStatement)
+SELECT 'transactionStatus is not Succeed,Pending,Cancelled',IF(COUNT(*)>0,'Fail','Pass') result,COUNT(*) number,'SELECT * from z_newcreate_template_transaction_table where length(trim(transactionStatus))>0 and transactionStatus not in (''Succeed'',''Cancelled'',''Pending'')'
+from z_newcreate_template_transaction_table where length(trim(transactionStatus))>0 and transactionStatus not in ('Succeed','Cancelled','Pending');
+
+#12)transactionDate 为空
+INSERT INTO smoke_test_report_for_template (errorMsg,passFlag,errorCount,sqlStatement)
+SELECT 'transactionDate is blank',IF(COUNT(*)>0,'Fail','Pass') result,COUNT(*) number,'SELECT * from z_newcreate_template_transaction_table where transactionType in(''pledge'',''pledgepayment'',''match pledge'',''donation'',''membership'',''event registration'',''product'') and (length(trim(transactionDate))=0 or transactionDate is null)'
+from z_newcreate_template_transaction_table where transactionType in('pledge','pledgepayment','match pledge','donation','membership','event registration','product') and (length(trim(transactionDate))=0 or transactionDate is null);
+
+
+#13) expectDate 为空
+INSERT INTO smoke_test_report_for_template (errorMsg,passFlag,errorCount,sqlStatement)
+SELECT 'installment expectDate is blank',IF(COUNT(*)>0,'Fail','Pass') result,COUNT(*) number,'SELECT * from z_newcreate_template_transaction_table where transactionType =''installment'' and (length(trim(expectDate))=0 or expectDate is null)'
+from z_newcreate_template_transaction_table where transactionType ='installment' and (length(trim(expectDate))=0 or expectDate is null);
+
+
+#14)transactionAmount is blank or 负数
+INSERT INTO smoke_test_report_for_template (errorMsg,passFlag,errorCount,sqlStatement)
+SELECT 'transactionAmount is blank or negative',IF(COUNT(*)>0,'Fail','Pass') result,COUNT(*) number,'SELECT * from z_newcreate_template_transaction_table where transactionType in(''pledge'',''pledgepayment'',''match pledge'',''donation'',''membership'',''event registration'',''product'',''donation write-off'')  and (length(trim(transactionAmount))=0 or transactionAmount is null OR transactionAmount+0<0)'
+from z_newcreate_template_transaction_table where transactionType in('pledge','pledgepayment','match pledge','donation','membership','event registration','product','donation write-off')  and (length(trim(transactionAmount))=0 or transactionAmount is null OR transactionAmount+0<0);
+
+#15)paymentAmount 负数
+INSERT INTO smoke_test_report_for_template (errorMsg,passFlag,errorCount,sqlStatement)
+SELECT 'paymentAmount is negative',IF(COUNT(*)>0,'Fail','Pass') result,COUNT(*) number,'SELECT * from z_newcreate_template_transaction_table where length(trim(paymentAmount))>0 and paymentAmount+0<0'
+from z_newcreate_template_transaction_table where length(trim(paymentAmount))>0 and  paymentAmount+0<0;
+
+#16)shoppingCartTotalCharge 负数
+INSERT INTO smoke_test_report_for_template (errorMsg,passFlag,errorCount,sqlStatement)
+SELECT 'shoppingCartTotalCharge is negative',IF(COUNT(*)>0,'Fail','Pass') result,COUNT(*) number,'SELECT * from z_newcreate_template_transaction_table where length(trim(shoppingCartTotalCharge))>0 and  shoppingCartTotalCharge+0<0'
+from z_newcreate_template_transaction_table where length(trim(shoppingCartTotalCharge))>0 and  shoppingCartTotalCharge+0<0;
+
+#17)shippingHandlingCost 负数
+INSERT INTO smoke_test_report_for_template (errorMsg,passFlag,errorCount,sqlStatement)
+SELECT 'shippingHandlingCost is negative',IF(COUNT(*)>0,'Fail','Pass') result,COUNT(*) number,'SELECT * from z_newcreate_template_transaction_table where length(trim(shippingHandlingCost))>0 and  shippingHandlingCost+0<0'
+from z_newcreate_template_transaction_table where length(trim(shippingHandlingCost))>0 and  shippingHandlingCost+0<0;
+
+#18)tax 负数
+INSERT INTO smoke_test_report_for_template (errorMsg,passFlag,errorCount,sqlStatement)
+SELECT 'tax is negative',IF(COUNT(*)>0,'Fail','Pass') result,COUNT(*) number,'SELECT * from z_newcreate_template_transaction_table where  length(trim(tax))>0 and tax+0<0'
+from z_newcreate_template_transaction_table where length(trim(tax))>0 and  tax+0<0;
+
+
+#19)giftAmount 负数
+INSERT INTO smoke_test_report_for_template (errorMsg,passFlag,errorCount,sqlStatement)
+SELECT 'giftAmount is negative',IF(COUNT(*)>0,'Fail','Pass') result,COUNT(*) number,'SELECT * from z_newcreate_template_transaction_table where length(trim(giftAmount))>0 and  giftAmount+0<0'
+from z_newcreate_template_transaction_table where  length(trim(giftAmount))>0 and  giftAmount+0<0;
+
+#20)tenderType<>in-kind,但是 fairMarketValue有值
+INSERT INTO smoke_test_report_for_template (errorMsg,passFlag,errorCount,sqlStatement)
+SELECT 'fairMarketValue is populated but not in-kind tenderType',IF(COUNT(*)>0,'Fail','Pass') result,COUNT(*) number,'SELECT * from z_newcreate_template_transaction_table where  length(trim(fairMarketValue))>0 and fairMarketValue+0>0 and tenderType<>''In-Kind'''
+from z_newcreate_template_transaction_table where  length(trim(fairMarketValue))>0 and fairMarketValue+0>0 and tenderType<>'In-Kind';
+
+#21)transaction tenderType 和 payment tenderType 不一样
+INSERT INTO smoke_test_report_for_template (errorMsg,passFlag,errorCount,sqlStatement)
+SELECT 'transaction tenderType diffenent with payment tenderType',IF(COUNT(*)>0,'Fail','Pass') result,COUNT(*) number,'SELECT * from z_newcreate_template_transaction_table z1,z_newcreate_template_transaction_table z2  where z2.transactionType=''payment'' and z2.parentTransactionLinkingId=z1.transactionLinkingId and z2.parentTransactionLinkingSeq=z1.transactionSeq and z2.parentTransactionLinkingIdSourceTable=z1.transactionLinkingIdSourceTable and z2.parentTransactionType=z1.transactionType and IF(z2.tenderType is null,''Check'',z2.tenderType)<>IF(z1.tenderType is null,''Check'',z1.tenderType)'
+from z_newcreate_template_transaction_table z1,z_newcreate_template_transaction_table z2  where z2.transactionType='payment' and z2.parentTransactionLinkingId=z1.transactionLinkingId and z2.parentTransactionLinkingSeq=z1.transactionSeq and z2.parentTransactionLinkingIdSourceTable=z1.transactionLinkingIdSourceTable and z2.parentTransactionType=z1.transactionType and IF(z2.tenderType is null,'Check',z2.tenderType)<>IF(z1.tenderType is null,'Check',z1.tenderType);
+
+#22) tenderType 不是系统默认的tender
+INSERT INTO smoke_test_report_for_template (errorMsg,passFlag,errorCount,sqlStatement)
+SELECT 'tenderType not in neon',IF(COUNT(*)>0,'Warning','Pass') result,COUNT(*) number,'SELECT * from z_newcreate_template_transaction_table where length(trim(tenderType))>0 and tenderType not in (SELECT name from tender where id+0<=15)'
+from z_newcreate_template_transaction_table where length(trim(tenderType))>0 and tenderType not in (SELECT name from tender where id+0<=15);
+
+
+#23) tenderType 是不是credit card 但是 有 信用卡信息
+INSERT INTO smoke_test_report_for_template (errorMsg,passFlag,errorCount,sqlStatement)
+SELECT 'tenderType is not CC but cc inf is populated',IF(COUNT(*)>0,'Fail','Pass') result,COUNT(*) number,'SELECT * from z_newcreate_template_transaction_table where length(trim(tenderType))>0 and tenderType<>''Credit Card (Offline-No Charge)'' and (length(trim(cardHolderName))>0 or length(trim(cardType))>0 or length(trim(cardExpirationDate))>0 or length(trim(cardLast4Digit))>0)'
+from z_newcreate_template_transaction_table where length(trim(tenderType))>0 and tenderType<>'Credit Card (Offline-No Charge)' and (length(trim(cardHolderName))>0 or length(trim(cardType))>0 or length(trim(cardExpirationDate))>0 or length(trim(cardLast4Digit))>0);
+
+
+
+
+#24) nccDescription populated but tender is not in-inkd
+INSERT INTO smoke_test_report_for_template (errorMsg,passFlag,errorCount,sqlStatement)
+SELECT 'tenderType is not In-Kind but nccDescription is populated',IF(COUNT(*)>0,'Fail','Pass') result,COUNT(*) number,'SELECT * from z_newcreate_template_transaction_table where length(trim(tenderType))>0 and tenderType<>''In-Kind'' and (length(trim(nccDescription))>0)'
+from z_newcreate_template_transaction_table where length(trim(tenderType))>0 and tenderType<>'In-Kind' and (length(trim(nccDescription))>0);
+###################################################Donation
+
+#25) pledge account  and pledge payment account  is diffenent
+INSERT INTO smoke_test_report_for_template (errorMsg,passFlag,errorCount,sqlStatement)
+SELECT 'pledge account and pledge payment account is diffenent',IF(COUNT(*)>0,'Fail','Pass') result,COUNT(*) number,'SELECT * from z_newcreate_template_transaction_table z1, z_newcreate_template_transaction_table z2  where z2.transactionType=''pledgepayment'' and z2.parentTransactionLinkingId=z1.transactionLinkingId and z2.parentTransactionLinkingSeq=z1.transactionSeq and z2.parentTransactionLinkingIdSourceTable=z1.transactionLinkingIdSourceTable and z2.parentTransactionType=z1.transactionType and IF(z2.accountId is null,'''',z2.accountId)<>IF(z1.accountId is null,'''',z1.accountId)'
+from z_newcreate_template_transaction_table z1, z_newcreate_template_transaction_table z2  where z2.transactionType='pledgepayment' and z2.parentTransactionLinkingId=z1.transactionLinkingId and z2.parentTransactionLinkingSeq=z1.transactionSeq and z2.parentTransactionLinkingIdSourceTable=z1.transactionLinkingIdSourceTable and z2.parentTransactionType=z1.transactionType and IF(z2.accountId is null,'',z2.accountId)<>IF(z1.accountId is null,'',z1.accountId);
+
+
+
+#26) one pledge payment link to multiple pledge
+INSERT INTO smoke_test_report_for_template (errorMsg,passFlag,errorCount,sqlStatement)
+SELECT 'one pledge payment link to multiple pledge',IF(COUNT(*)>0,'Fail','Pass') result,COUNT(*) number,'SELECT * from z_newcreate_template_transaction_table where transactionType=''pledgepayment'' and length(trim(parentTransactionLinkingId))>0 GROUP BY transactionLinkingId HAVING count(DISTINCT parentTransactionLinkingId)>1'
+from (SELECT * from z_newcreate_template_transaction_table where transactionType='pledgepayment' and length(trim(parentTransactionLinkingId))>0 GROUP BY transactionLinkingId HAVING count(DISTINCT parentTransactionLinkingId)>1) a;
+
+
+
+#27) total split donation amount is different with parent donation amount(这里应该是一个 warning)
+INSERT INTO smoke_test_report_for_template (errorMsg,passFlag,errorCount,sqlStatement)
+SELECT 'total split donation amount is different with parent donation amount',IF(COUNT(*)>0,'Warning','Pass') result,COUNT(*) number,'SELECT * from z_newcreate_template_transaction_table z1, z_newcreate_template_transaction_table z2  where z2.transactionType=''split donation'' and z2.parentTransactionLinkingId=z1.transactionLinkingId and z2.parentTransactionLinkingSeq=z1.transactionSeq and z2.parentTransactionLinkingIdSourceTable=z1.transactionLinkingIdSourceTable GROUP BY z2.parentTransactionLinkingId,z2.parentTransactionLinkingSeq,z2.parentTransactionLinkingIdSourceTable HAVING SUM(z2.transactionAmount+0)<>z1.transactionAmount+0'
+from (SELECT z1.* from z_newcreate_template_transaction_table z1, z_newcreate_template_transaction_table z2  where z2.transactionType='split donation' and z2.parentTransactionLinkingId=z1.transactionLinkingId and z2.parentTransactionLinkingSeq=z1.transactionSeq and z2.parentTransactionLinkingIdSourceTable=z1.transactionLinkingIdSourceTable GROUP BY z2.parentTransactionLinkingId,z2.parentTransactionLinkingSeq,z2.parentTransactionLinkingIdSourceTable HAVING SUM(z2.transactionAmount+0)<>z1.transactionAmount+0) a;
+
+#230) account of split donation is different
+INSERT INTO smoke_test_report_for_template (errorMsg,passFlag,errorCount,sqlStatement)
+SELECT 'account of split donation is different',IF(COUNT(*)>0,'Fail','Pass') result,COUNT(*) number,'SELECT * from z_newcreate_template_transaction_table z1, z_newcreate_template_transaction_table z2  where z2.transactionType=''split donation'' and z2.parentTransactionLinkingId=z1.transactionLinkingId and z2.parentTransactionLinkingSeq=z1.transactionSeq and z2.parentTransactionLinkingIdSourceTable=z1.transactionLinkingIdSourceTable and IFNULL(z2.accountId,'''')<>IFNULL(z1.accountId,'''')'
+from z_newcreate_template_transaction_table z1, z_newcreate_template_transaction_table z2  where z2.transactionType='split donation' and z2.parentTransactionLinkingId=z1.transactionLinkingId and z2.parentTransactionLinkingSeq=z1.transactionSeq and z2.parentTransactionLinkingIdSourceTable=z1.transactionLinkingIdSourceTable and IFNULL(z2.accountId,'')<>IFNULL(z1.accountId,'');
+
+#226) pledge or match pledge have payment amount
+INSERT INTO smoke_test_report_for_template (errorMsg,passFlag,errorCount,sqlStatement)
+SELECT 'pledge or match pledge have payment amount',IF(COUNT(*)>0,'Fail','Pass') result,COUNT(*) number,'SELECT * from z_newcreate_template_transaction_table where transactionType in(''pledge'',''match pledge'') and length(trim(paymentAmount))>0'
+from z_newcreate_template_transaction_table where transactionType in('pledge','match pledge') and length(trim(paymentAmount))>0;
+
+
+#227) payment rows link to pledge or match pledge
+INSERT INTO smoke_test_report_for_template (errorMsg,passFlag,errorCount,sqlStatement)
+SELECT 'payment rows link to pledge or match pledge',IF(COUNT(*)>0,'Fail','Pass') result,COUNT(*) number,'SELECT * from z_newcreate_template_transaction_table where transactionType =''payment'' and (parentTransactionLinkingId,parentTransactionLinkingIdSourceTable,parentTransactionLinkingSeq) in (SELECT transactionLinkingId,transactionLinkingIdSourceTable,transactionSeq from z_newcreate_template_transaction_table where transactionType in (''pledge'',''match pledge''))'
+from z_newcreate_template_transaction_table where transactionType ='payment' and (parentTransactionLinkingId,parentTransactionLinkingIdSourceTable,parentTransactionLinkingSeq) in (SELECT transactionLinkingId,transactionLinkingIdSourceTable,transactionSeq from z_newcreate_template_transaction_table where transactionType in ('pledge','match pledge'));
+
+
+
+
+##fund
+#28) fundLinkingId is invalid
+INSERT INTO smoke_test_report_for_template (errorMsg,passFlag,errorCount,sqlStatement)
+SELECT 'fundLinkingId is invalid',IF(COUNT(*)>0,'Fail','Pass') result,COUNT(*) number,'SELECT * from z_newcreate_template_transaction_table where length(trim(fundLinkingId))>0 and fundLinkingId not in (SELECT allocationLinkingId from z_newcreate_template_allocation where allocationType=''fund'' and length(trim(allocationLinkingId))>0)'
+from z_newcreate_template_transaction_table where length(trim(fundLinkingId))>0 and fundLinkingId not in (SELECT allocationLinkingId from z_newcreate_template_allocation where allocationType='fund' and length(trim(allocationLinkingId))>0 and length(trim(allocationLinkingId))>0);
+
+#29) fundLinkingId 对应的 fund 和 这个表里给的不一样
+INSERT INTO smoke_test_report_for_template (errorMsg,passFlag,errorCount,sqlStatement)
+SELECT 'fund from fundLinkingId is different with fund in transaction_table',IF(COUNT(*)>0,'Fail','Pass') result,COUNT(*) number,'SELECT * from z_newcreate_template_transaction_table z1,z_newcreate_template_allocation z2 where z1.fundLinkingId=z2.allocationLinkingId and z2.allocationType=''fund'' and z1.fundName<>z2.allocationName'
+from z_newcreate_template_transaction_table z1,z_newcreate_template_allocation z2 where z1.fundLinkingId=z2.allocationLinkingId and z2.allocationType='fund' and z1.fundName<>z2.allocationName;
+
+#30) same fundname with different fundcode
+CREATE TABLE z_newcreate_all_fund
+SELECT fundName,fundCode from z_newcreate_template_transaction_table where length(trim(fundName))>0 UNION all SELECT allocationName,allocationCode  from z_newcreate_template_allocation where allocationType='fund' and length(trim(allocationName))>0;
+
+INSERT INTO smoke_test_report_for_template (errorMsg,passFlag,errorCount,sqlStatement)
+SELECT 'same fundname with different fundcode',IF(COUNT(*)>0,'Fail','Pass') result,COUNT(*) number,'SELECT * from z_newcreate_all_fund where fundName in (SELECT fundName from z_newcreate_all_fund GROUP BY fundName HAVING count(DISTINCT fundCode)>1) GROUP BY fundName,fundCode'
+from  (SELECT * from z_newcreate_all_fund GROUP BY fundName HAVING count(DISTINCT fundCode)>1) a;
+
+#31) fundcode is populated but fundname is blank
+INSERT INTO smoke_test_report_for_template (errorMsg,passFlag,errorCount,sqlStatement)
+SELECT 'fundcode is populated but fundname is blank',IF(COUNT(*)>0,'Fail','Pass') result,COUNT(*) number,'SELECT * from z_newcreate_template_transaction_table where fundCode is not null and fundName is null'
+from z_newcreate_template_transaction_table where fundCode is not null and fundName is null;
+
+
+DROP TABLE z_newcreate_all_fund;
+
+####################campaign
+#33)campaignLinkingId is invalid
+INSERT INTO smoke_test_report_for_template (errorMsg,passFlag,errorCount,sqlStatement)
+SELECT 'campaignLinkingId is invalid',IF(COUNT(*)>0,'Fail','Pass') result,COUNT(*) number,'SELECT * from z_newcreate_template_transaction_table where length(trim(campaignLinkingId))>0 and campaignLinkingId not in (SELECT allocationLinkingId from z_newcreate_template_allocation where allocationType=''campaign'' and length(trim(allocationLinkingId))>0)'
+from z_newcreate_template_transaction_table where length(trim(campaignLinkingId))>0 and campaignLinkingId not in (SELECT allocationLinkingId from z_newcreate_template_allocation where allocationType='campaign' and length(trim(allocationLinkingId))>0 and length(trim(allocationLinkingId))>0);
+
+
+#34) campaignLinkingId 对应的 campaign 和 这个表里给的不一样
+INSERT INTO smoke_test_report_for_template (errorMsg,passFlag,errorCount,sqlStatement)
+SELECT 'campaign from campaignLinkingId is different with campaign in transaction_table',IF(COUNT(*)>0,'Fail','Pass') result,COUNT(*) number,'SELECT * from z_newcreate_template_transaction_table z1,z_newcreate_template_allocation z2 where z1.campaignLinkingId=z2.allocationLinkingId and z2.allocationType=''campaign'' and z1.campaignName<>z2.allocationName'
+from z_newcreate_template_transaction_table z1,z_newcreate_template_allocation z2 where z1.campaignLinkingId=z2.allocationLinkingId and z2.allocationType='campaign' and z1.campaignName<>z2.allocationName;
+
+#35) same campaign with different campaigncode
+DROP TABLE if EXISTS z_newcreate_all_campaign;
+CREATE TABLE z_newcreate_all_campaign
+SELECT campaignName,campaignCode from z_newcreate_template_transaction_table where length(trim(campaignName))>0  UNION all SELECT allocationName,allocationCode  from z_newcreate_template_allocation where allocationType='campaign' and length(trim(allocationName))>0;
+
+INSERT INTO smoke_test_report_for_template (errorMsg,passFlag,errorCount,sqlStatement)
+SELECT 'same campaign with different campaigncode',IF(COUNT(*)>0,'Fail','Pass') result,COUNT(*) number,'SELECT * from z_newcreate_all_campaign where campaignName in (SELECT campaignName from z_newcreate_all_campaign GROUP BY campaignName HAVING count(DISTINCT campaignCode)>1) GROUP BY campaignName,campaignCode'
+from  (SELECT * from z_newcreate_all_campaign GROUP BY campaignName HAVING count(DISTINCT campaignCode)>1) a;
+
+DROP TABLE z_newcreate_all_campaign;
+
+#36) campaigncode is  populated but campaignname is blank
+INSERT INTO smoke_test_report_for_template (errorMsg,passFlag,errorCount,sqlStatement)
+SELECT 'campaigncode is  populated but campaignname is blank',IF(COUNT(*)>0,'Fail','Pass') result,COUNT(*) number,'SELECT * from  z_newcreate_template_transaction_table WHERE campaignCode is not null and campaignName is null'
+from  z_newcreate_template_transaction_table WHERE campaignCode is not null and campaignName is null;
+
+
+####################purpose
+#38)purposeLinkingId is invalid
+INSERT INTO smoke_test_report_for_template (errorMsg,passFlag,errorCount,sqlStatement)
+SELECT 'purposeLinkingId is invalid',IF(COUNT(*)>0,'Fail','Pass') result,COUNT(*) number,'SELECT * from z_newcreate_template_transaction_table where length(trim(purposeLinkingId))>0 and purposeLinkingId not in (SELECT allocationLinkingId from z_newcreate_template_allocation where allocationType=''purpose'' and length(trim(allocationLinkingId))>0)'
+from z_newcreate_template_transaction_table where length(trim(purposeLinkingId))>0 and purposeLinkingId not in (SELECT allocationLinkingId from z_newcreate_template_allocation where allocationType='purpose' and length(trim(allocationLinkingId))>0 and length(trim(allocationLinkingId))>0);
+
+
+#39) purposeLinkingId 对应的 purpose 和 这个表里给的不一样
+INSERT INTO smoke_test_report_for_template (errorMsg,passFlag,errorCount,sqlStatement)
+SELECT 'purpose from purposeLinkingId is different with purpose in transaction_table',IF(COUNT(*)>0,'Fail','Pass') result,COUNT(*) number,'SELECT * from z_newcreate_template_transaction_table z1,z_newcreate_template_allocation z2 where z1.purposeLinkingId=z2.allocationLinkingId and z2.allocationType=''purpose'' and z1.purposeName<>z2.allocationName'
+from z_newcreate_template_transaction_table z1,z_newcreate_template_allocation z2 where z1.purposeLinkingId=z2.allocationLinkingId and z2.allocationType='purpose' and z1.purposeName<>z2.allocationName;
+
+
+
+
+#40) same purpose with different purposecode
+CREATE TABLE z_newcreate_all_purpose
+SELECT purposeName,purposeCode from z_newcreate_template_transaction_table where length(trim(purposeName))>0 UNION all SELECT allocationName,allocationCode  from z_newcreate_template_allocation where allocationType='purpose' and length(trim(allocationName))>0;
+
+INSERT INTO smoke_test_report_for_template (errorMsg,passFlag,errorCount,sqlStatement)
+SELECT 'same purpose with different purposecode',IF(COUNT(*)>0,'Fail','Pass') result,COUNT(*) number,'SELECT * from z_newcreate_all_purpose where purposeName in (SELECT purposeName from z_newcreate_all_purpose GROUP BY purposeName HAVING count(DISTINCT purposeCode)>1) GROUP BY purposeName,purposeCode'
+from  (SELECT * from z_newcreate_all_purpose GROUP BY purposeName HAVING count(DISTINCT purposeCode)>1) a;
+
+DROP TABLE z_newcreate_all_purpose;
+
+#41) purposeName is blank but purposecode populated
+INSERT INTO smoke_test_report_for_template (errorMsg,passFlag,errorCount,sqlStatement)
+SELECT 'purposeName is blank but purposecode populated',IF(COUNT(*)>0,'Fail','Pass') result,COUNT(*) number,'SELECT * from  z_newcreate_template_transaction_table where purposeCode is not null and purposeName is null'
+from  z_newcreate_template_transaction_table where purposeCode is not null and purposeName is null;
+
+####################source
+#43) sourceLinkingId is invalid
+INSERT INTO smoke_test_report_for_template (errorMsg,passFlag,errorCount,sqlStatement)
+SELECT 'sourceLinkingId is invalid',IF(COUNT(*)>0,'Fail','Pass') result,COUNT(*) number,'SELECT * from z_newcreate_template_transaction_table where length(trim(sourceLinkingId))>0 and sourceLinkingId not in (SELECT allocationLinkingId from z_newcreate_template_allocation where allocationType=''source'' and length(trim(allocationLinkingId))>0)'
+from z_newcreate_template_transaction_table where length(trim(sourceLinkingId))>0 and sourceLinkingId not in (SELECT allocationLinkingId from z_newcreate_template_allocation where allocationType='source' and length(trim(allocationLinkingId))>0);
+
+
+#44) sourceLinkingId 对应的 source 和 这个表里给的不一样
+INSERT INTO smoke_test_report_for_template (errorMsg,passFlag,errorCount,sqlStatement)
+SELECT 'source from sourceLinkingId is different with source in transaction_table',IF(COUNT(*)>0,'Fail','Pass') result,COUNT(*) number,'SELECT * from z_newcreate_template_transaction_table z1,z_newcreate_template_allocation z2 where z1.sourceLinkingId=z2.allocationLinkingId and z2.allocationType=''source'' and z1.sourceName<>z2.allocationName'
+from z_newcreate_template_transaction_table z1,z_newcreate_template_allocation z2 where z1.sourceLinkingId=z2.allocationLinkingId and z2.allocationType='source' and z1.sourceName<>z2.allocationName;
+
+
+#45) same source with different sourcecode
+DROP TABLE IF EXISTS z_newcreate_all_source;
+CREATE TABLE z_newcreate_all_source
+SELECT sourceName,sourceCode from z_newcreate_template_transaction_table where length(trim(sourceName))>0 UNION all SELECT allocationName,allocationCode  from z_newcreate_template_allocation where allocationType='source' and length(trim(allocationName))>0;
+
+INSERT INTO smoke_test_report_for_template (errorMsg,passFlag,errorCount,sqlStatement)
+SELECT 'same source with different sourcecode',IF(COUNT(*)>0,'Fail','Pass') result,COUNT(*) number,'SELECT * from z_newcreate_all_source where sourceName in (SELECT sourceName from z_newcreate_all_source GROUP BY sourceName HAVING count(DISTINCT sourceCode)>1) GROUP BY sourceName, sourceCode'
+from  (SELECT * from z_newcreate_all_source GROUP BY sourceName HAVING count(DISTINCT sourceCode)>1) a;
+
+DROP TABLE z_newcreate_all_source;
+
+#46) sourcecode is pupulated but sourceName is blank
+INSERT INTO smoke_test_report_for_template (errorMsg,passFlag,errorCount,sqlStatement)
+SELECT 'sourcecode is pupulated but sourceName is blank',IF(COUNT(*)>0,'Fail','Pass') result,COUNT(*) number,'SELECT * from z_newcreate_template_transaction_table where length(trim(sourceCode))>0 and sourceName is null'
+from z_newcreate_template_transaction_table where length(trim(sourceCode))>0 and sourceName is null;
+
+#48)honorMemoryType 有值但是 honorMemoryName is blank
+INSERT INTO smoke_test_report_for_template (errorMsg,passFlag,errorCount,sqlStatement)
+SELECT 'honorMemoryName is blank but honorMemoryType populated ',IF(COUNT(*)>0,'Fail','Pass') result,COUNT(*) number,'SELECT * from z_newcreate_template_transaction_table where length(trim(honorMemoryType))>0 and (length(trim(honorMemoryName))=0 or honorMemoryName is null)'
+from z_newcreate_template_transaction_table where length(trim(honorMemoryType))>0 and (length(trim(honorMemoryName))=0 or honorMemoryName is null);
+
+
+#49) honorMemoryName 里面包含了type
+
+INSERT INTO smoke_test_report_for_template (errorMsg,passFlag,errorCount,sqlStatement)
+SELECT 'type in honorMemoryName',IF(COUNT(*)>0,'Fail','Pass') result,COUNT(*) number,'SELECT * from z_newcreate_template_transaction_table where length(trim(honorMemoryName))>0 and INSTR(honorMemoryName,''Honor'') or INSTR(honorMemoryName,''Memory'')'
+from z_newcreate_template_transaction_table where length(trim(honorMemoryName))>0 and INSTR(honorMemoryName,'Honor') or INSTR(honorMemoryName,'Memory');
+
+#50) honorMemoryType 里面的值不包含 Honor 或者 Memory
+
+INSERT INTO smoke_test_report_for_template (errorMsg,passFlag,errorCount,sqlStatement)
+SELECT 'honorMemoryType not Honor or Memory',IF(COUNT(*)>0,'Fail','Pass') result,COUNT(*) number,'SELECT * from z_newcreate_template_transaction_table where length(trim(honorMemoryType))>0 and INSTR(honorMemoryType,''Honor'')=0 and INSTR(honorMemoryType,''Memory'')=0'
+from z_newcreate_template_transaction_table where length(trim(honorMemoryType))>0 and INSTR(honorMemoryType,'Honor')=0 and INSTR(honorMemoryType,'Memory')=0;
+
+
+#51) honorMemoryType 里面同时包含 Honor 和 Memory
+
+INSERT INTO smoke_test_report_for_template (errorMsg,passFlag,errorCount,sqlStatement)
+SELECT 'honorMemoryType both Honor and Memory',IF(COUNT(*)>0,'Fail','Pass') result,COUNT(*) number,'SELECT * from z_newcreate_template_transaction_table where length(trim(honorMemoryType))>0 and INSTR(honorMemoryType,''Honor'') and INSTR(honorMemoryType,''Memory'')'
+from z_newcreate_template_transaction_table where length(trim(honorMemoryType))>0 and INSTR(honorMemoryType,'Honor') and INSTR(honorMemoryType,'Memory');
+
+#52)acknowledgeAccountLinkingId is invalid
+
+INSERT INTO smoke_test_report_for_template (errorMsg,passFlag,errorCount,sqlStatement)
+SELECT 'acknowledgeAccountLinkingId is invalid',IF(COUNT(*)>0,'Fail','Pass') result,COUNT(*) number,'SELECT * from z_newcreate_template_transaction_table z1 left join z_newcreate_template_basic_account_info z2 on z1.acknowledgeAccountLinkingId=z2.mainAccountLinkingId and z1.acknowledgeAccountLinkingIdSourceTable=z2.mainAccountLinkingIdSourceTable and z1.acknowledgeAccountLinkingIdSeq=z2.accountSequence  and z2.masterRecord=1 where z1.acknowledgeAccountLinkingId is not null and z2.mainAccountLinkingId is null'
+from z_newcreate_template_transaction_table z1 left join z_newcreate_template_basic_account_info z2 on z1.acknowledgeAccountLinkingId=z2.mainAccountLinkingId and z1.acknowledgeAccountLinkingIdSourceTable=z2.mainAccountLinkingIdSourceTable and z1.acknowledgeAccountLinkingIdSeq=z2.accountSequence  and z2.masterRecord=1 where z1.acknowledgeAccountLinkingId is not null and z2.mainAccountLinkingId is null;
+
+#53)acknowledgeAccountLinkingId 对应的账号名字跟 acknowledgeName 不一样
+
+INSERT INTO smoke_test_report_for_template (errorMsg,passFlag,errorCount,sqlStatement)
+SELECT 'acknowledgeAccountLinkingId name is different with acknowledgeName',IF(COUNT(*)>0,'Fail','Pass') result,COUNT(*) number,'SELECT * from z_newcreate_template_transaction_table z1 join z_newcreate_template_basic_account_info z2 on z1.acknowledgeAccountLinkingId=z2.mainAccountLinkingId and z1.acknowledgeAccountLinkingIdSourceTable=z2.mainAccountLinkingIdSourceTable and z1.acknowledgeAccountLinkingIdSeq=z2.accountSequence  and z2.masterRecord=1 join user u on z2.first_neon_accountId=u.accountId and u.primaryContact=1 where z1.acknowledgeName<>CONCAT_WS('' '',u.firstName,u.lastName) and  z1.acknowledgeName<>CONCAT(u.firstName,''&&&'',u.lastName)'
+from z_newcreate_template_transaction_table z1 join z_newcreate_template_basic_account_info z2 on z1.acknowledgeAccountLinkingId=z2.mainAccountLinkingId and z1.acknowledgeAccountLinkingIdSourceTable=z2.mainAccountLinkingIdSourceTable and z1.acknowledgeAccountLinkingIdSeq=z2.accountSequence  and z2.masterRecord=1 join user u on z2.first_neon_accountId=u.accountId and u.primaryContact=1 where z1.acknowledgeName<>CONCAT_WS(' ',u.firstName,u.lastName) and  z1.acknowledgeName<>CONCAT(u.firstName,'&&&',u.lastName);
+
+
+#54) solicitorAccountLinkingId is invalid
+INSERT INTO smoke_test_report_for_template (errorMsg,passFlag,errorCount,sqlStatement)
+SELECT 'solicitorAccountLinkingId is invalid',IF(COUNT(*)>0,'Fail','Pass') result,COUNT(*) number,'SELECT * from z_newcreate_template_transaction_table z1 left join z_newcreate_template_basic_account_info z2 on z1.solicitorAccountLinkingId=z2.mainAccountLinkingId and z1.solicitorAccountLinkingIdSourceTable=z2.mainAccountLinkingIdSourceTable and z1.solicitorAccountLinkingSeq=z2.accountSequence  and z2.masterRecord=1 where z1.solicitorAccountLinkingId is not null and z2.mainAccountLinkingId is null'
+from z_newcreate_template_transaction_table z1 left join z_newcreate_template_basic_account_info z2 on z1.solicitorAccountLinkingId=z2.mainAccountLinkingId and z1.solicitorAccountLinkingIdSourceTable=z2.mainAccountLinkingIdSourceTable and z1.solicitorAccountLinkingSeq=z2.accountSequence  and z2.masterRecord=1 where z1.solicitorAccountLinkingId is not null and  z2.mainAccountLinkingId is null;
+
+#55) solicitorAccountLinkingId is organization account
+INSERT INTO smoke_test_report_for_template (errorMsg,passFlag,errorCount,sqlStatement)
+SELECT 'solicitorAccountLinkingId is organization account',IF(COUNT(*)>0,'Fail','Pass') result,COUNT(*) number,'SELECT * from z_newcreate_template_transaction_table z1 join z_newcreate_template_basic_account_info z2 on z1.solicitorAccountLinkingId=z2.mainAccountLinkingId and z1.solicitorAccountLinkingIdSourceTable=z2.mainAccountLinkingIdSourceTable and z1.solicitorAccountLinkingSeq=z2.accountSequence  and z2.masterRecord=1 where z2.isCompanyAccount=1'
+from z_newcreate_template_transaction_table z1 join z_newcreate_template_basic_account_info z2 on z1.solicitorAccountLinkingId=z2.mainAccountLinkingId and z1.solicitorAccountLinkingIdSourceTable=z2.mainAccountLinkingIdSourceTable and z1.solicitorAccountLinkingSeq=z2.accountSequence  and z2.masterRecord=1 where z2.isCompanyAccount=1;
+
+
+#56)solicitorAccountLinkingId 对应的账号名字跟 solicitorName 不一样
+INSERT INTO smoke_test_report_for_template (errorMsg,passFlag,errorCount,sqlStatement)
+SELECT 'solicitorAccountLinkingId name is different with solicitorName',IF(COUNT(*)>0,'Fail','Pass') result,COUNT(*) number,'SELECT * from z_newcreate_template_transaction_table z1 join z_newcreate_template_basic_account_info z2 on z1.solicitorAccountLinkingId=z2.mainAccountLinkingId and z1.solicitorAccountLinkingIdSourceTable=z2.mainAccountLinkingIdSourceTable and z1.solicitorAccountLinkingSeq=z2.accountSequence  and z2.masterRecord=1 join user u on z2.first_neon_accountId=u.accountId and u.primaryContact=1 where z1.solicitorName<>CONCAT_WS('' '',u.firstName,u.lastName) and  z1.solicitorName<>CONCAT(u.firstName,''&&&'',u.lastName)'
+from z_newcreate_template_transaction_table z1 join z_newcreate_template_basic_account_info z2 on z1.solicitorAccountLinkingId=z2.mainAccountLinkingId and z1.solicitorAccountLinkingIdSourceTable=z2.mainAccountLinkingIdSourceTable and z1.solicitorAccountLinkingSeq=z2.accountSequence  and z2.masterRecord=1 join user u on z2.first_neon_accountId=u.accountId and u.primaryContact=1 where z1.solicitorName<>CONCAT_WS(' ',u.firstName,u.lastName) and  z1.solicitorName<>CONCAT(u.firstName,'&&&',u.lastName);
+
+
+#57) fundraiserLinkingId is invalid
+INSERT INTO smoke_test_report_for_template (errorMsg,passFlag,errorCount,sqlStatement)
+SELECT 'fundraiserLinkingId is invalid',IF(COUNT(*)>0,'Fail','Pass') result,COUNT(*) number,'SELECT * from z_newcreate_template_transaction_table z1 left join z_newcreate_template_basic_account_info z2 on z1.fundraiserLinkingId=z2.mainAccountLinkingId and z1.fundraiserLinkingIdSourceTable=z2.mainAccountLinkingIdSourceTable and z1.fundraiserLinkingSeq=z2.accountSequence  and z2.masterRecord=1 where z1.fundraiserLinkingId is not null and z2.mainAccountLinkingId is null'
+from z_newcreate_template_transaction_table z1 left join z_newcreate_template_basic_account_info z2 on z1.fundraiserLinkingId=z2.mainAccountLinkingId and z1.fundraiserLinkingIdSourceTable=z2.mainAccountLinkingIdSourceTable and z1.fundraiserLinkingSeq=z2.accountSequence  and z2.masterRecord=1 where z1.fundraiserLinkingId is not null and z2.mainAccountLinkingId is null;
+
+#58) fundraiserLinkingId is organization account
+INSERT INTO smoke_test_report_for_template (errorMsg,passFlag,errorCount,sqlStatement)
+SELECT 'fundraiserLinkingId is organization account',IF(COUNT(*)>0,'Fail','Pass') result,COUNT(*) number,'SELECT * from z_newcreate_template_transaction_table z1  join z_newcreate_template_basic_account_info z2 on z1.fundraiserLinkingId=z2.mainAccountLinkingId and z1.fundraiserLinkingIdSourceTable=z2.mainAccountLinkingIdSourceTable and z1.fundraiserLinkingSeq=z2.accountSequence  and z2.masterRecord=1 where z2.isCompanyAccount=1'
+from z_newcreate_template_transaction_table z1  join z_newcreate_template_basic_account_info z2 on z1.fundraiserLinkingId=z2.mainAccountLinkingId and z1.fundraiserLinkingIdSourceTable=z2.mainAccountLinkingIdSourceTable and z1.fundraiserLinkingSeq=z2.accountSequence  and z2.masterRecord=1 where z2.isCompanyAccount=1;
+
+#59) fundraiserLinkingId 对应的账号名字跟 solicitorName 不一样
+INSERT INTO smoke_test_report_for_template (errorMsg,passFlag,errorCount,sqlStatement)
+SELECT 'fundraiserLinkingId name is different with fundraiserName',IF(COUNT(*)>0,'Fail','Pass') result,COUNT(*) number,'SELECT * from z_newcreate_template_transaction_table z1 left join z_newcreate_template_basic_account_info z2 on z1.fundraiserLinkingId=z2.mainAccountLinkingId and z1.fundraiserLinkingIdSourceTable=z2.mainAccountLinkingIdSourceTable and z1.fundraiserLinkingSeq=z2.accountSequence  and z2.masterRecord=1 join user u on z2.first_neon_accountId=u.accountId and u.primaryContact=1 where z1.fundraiserName<>CONCAT_WS('' '',u.firstName,u.lastName) and  z1.fundraiserName<>CONCAT(u.firstName,''&&&'',u.lastName)'
+from z_newcreate_template_transaction_table z1 left join z_newcreate_template_basic_account_info z2 on z1.fundraiserLinkingId=z2.mainAccountLinkingId and z1.fundraiserLinkingIdSourceTable=z2.mainAccountLinkingIdSourceTable and z1.fundraiserLinkingSeq=z2.accountSequence  and z2.masterRecord=1 join user u on z2.first_neon_accountId=u.accountId and u.primaryContact=1 where z1.fundraiserName<>CONCAT_WS(' ',u.firstName,u.lastName) and  z1.fundraiserName<>CONCAT(u.firstName,'&&&',u.lastName);
+
+#60) fundraiser is populated but campaign is blank
+INSERT INTO smoke_test_report_for_template (errorMsg,passFlag,errorCount,sqlStatement)
+SELECT 'fundraiser is populated but campaign is blank',IF(COUNT(*)>0,'Fail','Pass') result,COUNT(*) number,'SELECT * from z_newcreate_template_transaction_table where (length(trim(fundraiserLinkingId))>0 or length(trim(fundraiserName))>0) and ((campaignName is null or length(trim(campaignName))=0) and (campaignLinkingId is null or length(trim(campaignLinkingId))=0))'
+from z_newcreate_template_transaction_table where (length(trim(fundraiserLinkingId))>0 or length(trim(fundraiserName))>0) and ((campaignName is null or length(trim(campaignName))=0) and (campaignLinkingId is null or length(trim(campaignLinkingId))=0));
+
+
+#61) 同一个 fundraiser 在同一个campaign下面出现在了多个 team 下面
+INSERT INTO smoke_test_report_for_template (errorMsg,passFlag,errorCount,sqlStatement)
+SELECT 'same fundraiser in same campaign with multiple fundraiserTeamName ',IF(COUNT(*)>0,'Fail','Pass') result,COUNT(*) number,'SELECT * from z_newcreate_template_transaction_table where (length(trim(campaignName))>0 or length(trim(campaignLinkingId))>0) and (length(trim(fundraiserLinkingId))>0 or length(trim(fundraiserName))>0) and length(trim(fundraiserTeamName))>0 GROUP BY fundraiserLinkingId, fundraiserName,campaignName,campaignLinkingId HAVING count(DISTINCT fundraiserTeamName)>1'
+from (SELECT * from  z_newcreate_template_transaction_table where (length(trim(campaignName))>0 or length(trim(campaignLinkingId))>0) and (length(trim(fundraiserLinkingId))>0 or length(trim(fundraiserName))>0) and length(trim(fundraiserTeamName))>0 GROUP BY fundraiserLinkingId, fundraiserName,campaignName,campaignLinkingId HAVING count(DISTINCT fundraiserTeamName)>1) a;
+
+#62) cardType 不是系统默认值
+INSERT INTO smoke_test_report_for_template (errorMsg,passFlag,errorCount,sqlStatement)
+SELECT 'cardType is invalid',IF(COUNT(*)>0,'Fail','Pass') result,COUNT(*) number,'SELECT * from z_newcreate_template_transaction_table where length(trim(cardType))>0 and cardType not in (SELECT id from credit_card_type_cd) and cardType not in (SELECT `name` from credit_card_type_cd)'
+from z_newcreate_template_transaction_table where length(trim(cardType))>0 and cardType not in (SELECT id from credit_card_type_cd) and cardType not in (SELECT `name` from credit_card_type_cd) ;
+
+#63) cardExpirationDate 需要是标准的时间
+INSERT INTO smoke_test_report_for_template (errorMsg,passFlag,errorCount,sqlStatement)
+SELECT 'cardExpirationDate should be normal date',IF(COUNT(*)>0,'Fail','Pass') result,COUNT(*) number,'SELECT * from z_newcreate_template_transaction_table where length(trim(cardExpirationDate))>0 and IF(cardExpirationDate like ''% %'', SUBSTRING_INDEX(cardExpirationDate,'' '',1),cardExpirationDate) not like ''____-__-__'''
+from z_newcreate_template_transaction_table where length(trim(cardExpirationDate))>0 and IF(cardExpirationDate like '% %', SUBSTRING_INDEX(cardExpirationDate,' ',1),cardExpirationDate) not like '____-__-__';
+
+#64) donation row have membershipLevel
+INSERT INTO smoke_test_report_for_template (errorMsg,passFlag,errorCount,sqlStatement)
+SELECT 'donation row have membershipLevel',IF(COUNT(*)>0,'Fail','Pass') result,COUNT(*) number,'SELECT * from z_newcreate_template_transaction_table where transactionType in(''pledge'',''donation'',''match pledge'',''pledgepayment'',''recurring donation'',''split donation'') and (length(trim(membershipLevel))>0 or length(trim(membershipLinkingId))>0)'
+from z_newcreate_template_transaction_table where transactionType in('pledge','donation','match pledge','pledgepayment','recurring donation','split donation') and (length(trim(membershipLevel))>0 or length(trim(membershipLinkingId))>0);
+
+#65) donation row have membershipEnrollmentType
+INSERT INTO smoke_test_report_for_template (errorMsg,passFlag,errorCount,sqlStatement)
+SELECT 'donation row have membershipEnrollmentType',IF(COUNT(*)>0,'Fail','Pass') result,COUNT(*) number,'SELECT * from z_newcreate_template_transaction_table where transactionType in(''pledge'',''donation'',''match pledge'',''pledgepayment'',''recurring donation'',''split donation'') and length(trim(membershipEnrollmentType))>0'
+from z_newcreate_template_transaction_table where transactionType in('pledge','donation','match pledge','pledgepayment','recurring donation','split donation') and length(trim(membershipEnrollmentType))>0 ;
+
+#66) donation row have membershiptrem inf
+INSERT INTO smoke_test_report_for_template (errorMsg,passFlag,errorCount,sqlStatement)
+SELECT 'donation row have membershiptrem inf',IF(COUNT(*)>0,'Fail','Pass') result,COUNT(*) number,'SELECT * from z_newcreate_template_transaction_table where transactionType in(''pledge'',''donation'',''match pledge'',''pledgepayment'',''recurring donation'',''split donation'') and (length(trim(membershipTermName))>0  or length(trim(membershipTermCost))>0 or length(trim(membershipStartDate))>0 or length(trim(membershipEndDate))>0)'
+from z_newcreate_template_transaction_table where transactionType in('pledge','donation','match pledge','pledgepayment','recurring donation','split donation') and ( length(trim(membershipTermName))>0  or length(trim(membershipTermCost))>0 or length(trim(membershipStartDate))>0 or length(trim(membershipEndDate))>0);
+
+#67) donation row have eventName
+INSERT INTO smoke_test_report_for_template (errorMsg,passFlag,errorCount,sqlStatement)
+SELECT 'donation row have event',IF(COUNT(*)>0,'Fail','Pass') result,COUNT(*) number,'SELECT * from z_newcreate_template_transaction_table where transactionType in(''pledge'',''donation'',''match pledge'',''pledgepayment'',''recurring donation'',''split donation'') and ( length(trim(eventName))>0  or length(trim(eventLinkingId))>0)'
+from z_newcreate_template_transaction_table where transactionType in('pledge','donation','match pledge','pledgepayment','recurring donation','split donation') and ( length(trim(eventName))>0  or length(trim(eventLinkingId))>0);
+
+#68) donation row have eventCategory or eventTopic
+INSERT INTO smoke_test_report_for_template (errorMsg,passFlag,errorCount,sqlStatement)
+SELECT 'donation row have eventCategory or eventTopic',IF(COUNT(*)>0,'Fail','Pass') result,COUNT(*) number,'SELECT * from z_newcreate_template_transaction_table where transactionType in(''pledge'',''donation'',''match pledge'',''pledgepayment'',''recurring donation'',''split donation'') and ( length(trim(eventTopic))>0  or length(trim(eventCategory))>0)'
+from z_newcreate_template_transaction_table where transactionType in('pledge','donation','match pledge','pledgepayment','recurring donation','split donation') and ( length(trim(eventTopic))>0  or length(trim(eventCategory))>0);
+
+#69) donation row have eventSessionName or eventTicketName
+INSERT INTO smoke_test_report_for_template (errorMsg,passFlag,errorCount,sqlStatement)
+SELECT 'donation row have eventSessionName or eventTicketName',IF(COUNT(*)>0,'Fail','Pass') result,COUNT(*) number,'SELECT * from z_newcreate_template_transaction_table where transactionType in(''pledge'',''donation'',''match pledge'',''pledgepayment'',''recurring donation'',''split donation'') and ( length(trim(eventSessionName))>0  or length(trim(eventTicketName))>0)'
+from z_newcreate_template_transaction_table where transactionType in('pledge','donation','match pledge','pledgepayment','recurring donation','split donation') and ( length(trim(eventSessionName))>0  or length(trim(eventTicketName))>0);
+
+#70) donation row have attendeeCount or attendeeName
+INSERT INTO smoke_test_report_for_template (errorMsg,passFlag,errorCount,sqlStatement)
+SELECT 'donation row have attendeeCount or attendeeName',IF(COUNT(*)>0,'Fail','Pass') result,COUNT(*) number,'SELECT * from z_newcreate_template_transaction_table where transactionType in(''pledge'',''donation'',''match pledge'',''pledgepayment'',''recurring donation'',''split donation'') and ( length(trim(attendeeCount))>0  or length(trim(attendeeName))>0)'
+from z_newcreate_template_transaction_table where transactionType in('pledge','donation','match pledge','pledgepayment','recurring donation','split donation') and ( length(trim(attendeeCount))>0  or length(trim(attendeeName))>0);
+
+#71) donation row have giftAmount
+INSERT INTO smoke_test_report_for_template (errorMsg,passFlag,errorCount,sqlStatement)
+SELECT 'donation row have giftAmount',IF(COUNT(*)>0,'Fail','Pass') result,COUNT(*) number,'SELECT * from z_newcreate_template_transaction_table where transactionType in(''pledge'',''donation'',''match pledge'',''pledgepayment'',''recurring donation'',''split donation'') and ( length(trim(giftAmount))>0)'
+from z_newcreate_template_transaction_table where transactionType in('pledge','donation','match pledge','pledgepayment','recurring donation','split donation') and (length(trim(giftAmount))>0);
+
+
+#72) donation row have productName
+INSERT INTO smoke_test_report_for_template (errorMsg,passFlag,errorCount,sqlStatement)
+SELECT 'donation row have product',IF(COUNT(*)>0,'Fail','Pass') result,COUNT(*) number,'SELECT * from z_newcreate_template_transaction_table where transactionType in(''pledge'',''donation'',''match pledge'',''pledgepayment'',''recurring donation'',''split donation'') and ( length(trim(productName))>0 or length(trim(productLinkingId))>0)'
+from z_newcreate_template_transaction_table where transactionType in('pledge','donation','match pledge','pledgepayment','recurring donation','split donation') and (length(trim(productName))>0 or length(trim(productLinkingId))>0);
+
+#73) donation row have productQuantity
+INSERT INTO smoke_test_report_for_template (errorMsg,passFlag,errorCount,sqlStatement)
+SELECT 'donation row have productQuantity',IF(COUNT(*)>0,'Fail','Pass') result,COUNT(*) number,'SELECT * from z_newcreate_template_transaction_table where transactionType in(''pledge'',''donation'',''match pledge'',''pledgepayment'',''recurring donation'',''split donation'') and ( length(trim(productQuantity))>0)'
+from z_newcreate_template_transaction_table where transactionType in('pledge','donation','match pledge','pledgepayment','recurring donation','split donation') and (length(trim(productQuantity))>0);
+
+#74) donation row have productChoice
+INSERT INTO smoke_test_report_for_template (errorMsg,passFlag,errorCount,sqlStatement)
+SELECT 'donation row have productChoice',IF(COUNT(*)>0,'Fail','Pass') result,COUNT(*) number,'SELECT * from z_newcreate_template_transaction_table where transactionType in(''pledge'',''donation'',''match pledge'',''pledgepayment'',''recurring donation'',''split donation'') and (length(trim(productChoiceOption1))>0 or length(trim(productChoiceName1))>0 or length(trim(productChoiceOption2))>0 or length(trim(productChoiceName2))>0 or length(trim(productChoiceOption3))>0 or length(trim(productChoiceName3))>0)'
+from z_newcreate_template_transaction_table where transactionType in('pledge','donation','match pledge','pledgepayment','recurring donation','split donation') and (length(trim(productChoiceOption1))>0 or length(trim(productChoiceName1))>0 or length(trim(productChoiceOption2))>0 or length(trim(productChoiceName2))>0 or length(trim(productChoiceOption3))>0 or length(trim(productChoiceName3))>0);
+################################################################################## membership
+#75) membership row have fairMarketValue
+INSERT INTO smoke_test_report_for_template (errorMsg,passFlag,errorCount,sqlStatement)
+SELECT 'membership row have fairMarketValue',IF(COUNT(*)>0,'Fail','Pass') result,COUNT(*) number,'SELECT * from z_newcreate_template_transaction_table where transactionType in(''membership'') and (length(trim(fairMarketValue))>0)'
+from z_newcreate_template_transaction_table where transactionType in('membership') and (length(trim(fairMarketValue))>0);
+
+#76) membership row have fund
+INSERT INTO smoke_test_report_for_template (errorMsg,passFlag,errorCount,sqlStatement)
+SELECT 'membership row have fund',IF(COUNT(*)>0,'Fail','Pass') result,COUNT(*) number,'SELECT * from z_newcreate_template_transaction_table where transactionType in(''membership'') and (length(trim(fundName))>0 or length(trim(fundLinkingId))>0)'
+from z_newcreate_template_transaction_table where transactionType in('membership') and (length(trim(fundName))>0 or length(trim(fundLinkingId))>0);
+
+#77) membership row have campaign
+INSERT INTO smoke_test_report_for_template (errorMsg,passFlag,errorCount,sqlStatement)
+SELECT 'membership row have campaign',IF(COUNT(*)>0,'Fail','Pass') result,COUNT(*) number,'SELECT * from z_newcreate_template_transaction_table where transactionType in(''membership'') and (length(trim(campaignName))>0 or length(trim(campaignLinkingId))>0)'
+from z_newcreate_template_transaction_table where transactionType in('membership') and (length(trim(campaignName))>0 or length(trim(campaignLinkingId))>0);
+
+#78) membership row have purpose
+INSERT INTO smoke_test_report_for_template (errorMsg,passFlag,errorCount,sqlStatement)
+SELECT 'membership row have purpose',IF(COUNT(*)>0,'Fail','Pass') result,COUNT(*) number,'SELECT * from z_newcreate_template_transaction_table where transactionType in(''membership'') and (length(trim(purposeName))>0 or length(trim(purposeLinkingId))>0)'
+from z_newcreate_template_transaction_table where transactionType in('membership') and (length(trim(purposeName))>0 or length(trim(purposeLinkingId))>0);
+
+#79) membership row have honorMemory
+INSERT INTO smoke_test_report_for_template (errorMsg,passFlag,errorCount,sqlStatement)
+SELECT 'membership row have honorMemory',IF(COUNT(*)>0,'Fail','Pass') result,COUNT(*) number,'SELECT * from z_newcreate_template_transaction_table where transactionType in(''membership'') and (length(trim(honorMemoryName))>0 or length(trim(honorMemoryType))>0)'
+from z_newcreate_template_transaction_table where transactionType in('membership') and (length(trim(honorMemoryName))>0 or length(trim(honorMemoryType))>0);
+
+#80) membership row have solicitationMethod
+INSERT INTO smoke_test_report_for_template (errorMsg,passFlag,errorCount,sqlStatement)
+SELECT 'membership row have solicitationMethod',IF(COUNT(*)>0,'Fail','Pass') result,COUNT(*) number,'SELECT * from z_newcreate_template_transaction_table where transactionType in(''membership'') and (length(trim(solicitationMethod))>0)'
+from z_newcreate_template_transaction_table where transactionType in('membership') and (length(trim(solicitationMethod))>0);
+
+
+#81) membership row have acknowledge
+INSERT INTO smoke_test_report_for_template (errorMsg,passFlag,errorCount,sqlStatement)
+SELECT 'membership row have acknowledge',IF(COUNT(*)>0,'Fail','Pass') result,COUNT(*) number,'SELECT * from z_newcreate_template_transaction_table where transactionType in(''membership'') and (length(trim(acknowledgeName))>0 or length(trim(acknowledgeAccountLinkingId))>0)'
+from z_newcreate_template_transaction_table where transactionType in('membership') and (length(trim(acknowledgeName))>0 or length(trim(acknowledgeAccountLinkingId))>0);
+
+#82) membership row have solicitor
+INSERT INTO smoke_test_report_for_template (errorMsg,passFlag,errorCount,sqlStatement)
+SELECT 'membership row have solicitor',IF(COUNT(*)>0,'Fail','Pass') result,COUNT(*) number,'SELECT * from z_newcreate_template_transaction_table where transactionType in(''membership'') and (length(trim(solicitorName))>0 or length(trim(solicitorAccountLinkingId))>0)'
+from z_newcreate_template_transaction_table where transactionType in('membership') and (length(trim(solicitorName))>0 or length(trim(solicitorAccountLinkingId))>0);
+
+#83) membership row have fundraiser
+INSERT INTO smoke_test_report_for_template (errorMsg,passFlag,errorCount,sqlStatement)
+SELECT 'membership row have fundraiser',IF(COUNT(*)>0,'Fail','Pass') result,COUNT(*) number,'SELECT * from z_newcreate_template_transaction_table where transactionType in(''membership'') and (length(trim(fundraiserName))>0 or length(trim(fundraiserLinkingId))>0)'
+from z_newcreate_template_transaction_table where transactionType in('membership') and (length(trim(fundraiserName))>0 or length(trim(fundraiserLinkingId))>0);
+
+#84) membership row have donorNote or donorName
+INSERT INTO smoke_test_report_for_template (errorMsg,passFlag,errorCount,sqlStatement)
+SELECT 'membership row have donorNote or donorName',IF(COUNT(*)>0,'Fail','Pass') result,COUNT(*) number,'SELECT * from z_newcreate_template_transaction_table where transactionType in(''membership'') and (length(trim(donorNote))>0 or length(trim(donorName))>0)'
+from z_newcreate_template_transaction_table where transactionType in('membership') and (length(trim(donorNote))>0 or length(trim(donorName))>0);
+
+#85) membership row is keepAnonymous
+INSERT INTO smoke_test_report_for_template (errorMsg,passFlag,errorCount,sqlStatement)
+SELECT 'membership row is keepAnonymous',IF(COUNT(*)>0,'Fail','Pass') result,COUNT(*) number,'SELECT * from z_newcreate_template_transaction_table where transactionType in(''membership'') and (length(trim(keepAnonymous))>0 and keepAnonymous in(1,2))'
+from z_newcreate_template_transaction_table where transactionType in('membership') and (length(trim(keepAnonymous))>0 and keepAnonymous in(1,2));
+
+#86) membership row have batchNumber
+INSERT INTO smoke_test_report_for_template (errorMsg,passFlag,errorCount,sqlStatement)
+SELECT 'membership row have batchNumber',IF(COUNT(*)>0,'Fail','Pass') result,COUNT(*) number,'SELECT * from z_newcreate_template_transaction_table where transactionType in(''membership'') and (length(trim(batchNumber))>0)'
+from z_newcreate_template_transaction_table where transactionType in('membership') and (length(trim(batchNumber))>0);
+
+#87) membershipEnrollmentType is not Join or Renew
+INSERT INTO smoke_test_report_for_template (errorMsg,passFlag,errorCount,sqlStatement)
+SELECT 'membership row have batchNumber',IF(COUNT(*)>0,'Fail','Pass') result,COUNT(*) number,'SELECT * from z_newcreate_template_transaction_table where transactionType in(''membership'') and (length(trim(membershipEnrollmentType))>0 and membershipEnrollmentType not in (''Join'',''Renew''))'
+from z_newcreate_template_transaction_table where transactionType in('membership') and (length(trim(membershipEnrollmentType))>0 and membershipEnrollmentType not in ('Join','Renew'));
+
+#88) membershipTermUnit not normal values
+INSERT INTO smoke_test_report_for_template (errorMsg,passFlag,errorCount,sqlStatement)
+SELECT 'membershipTermUnit not normal values',IF(COUNT(*)>0,'Fail','Pass') result,COUNT(*) number,'SELECT * from z_newcreate_template_transaction_table where transactionType in(''membership'') and  (length(trim(membershipTermUnit))>0 and membershipTermUnit not in (''Year'',''Month'',''Day'',''Life'',''Week'',''1'',''2'',''3'',''4'',''5''))'
+from z_newcreate_template_transaction_table where transactionType in('membership') and (length(trim(membershipTermUnit))>0 and membershipTermUnit not in ('Year','Month','Day','Life','Week','1','2','3','4','5'));
+
+#89) membershipTermUnit is Week
+INSERT INTO smoke_test_report_for_template (errorMsg,passFlag,errorCount,sqlStatement)
+SELECT 'membershipTermUnit is Week',IF(COUNT(*)>0,'Fail','Pass') result,COUNT(*) number,'SELECT * from z_newcreate_template_transaction_table where transactionType in(''membership'') and (length(trim(membershipTermUnit))>0 and membershipTermUnit in (''Week'',''5''))'
+from z_newcreate_template_transaction_table where transactionType in('membership') and (length(trim(membershipTermUnit))>0 and membershipTermUnit in ('Week','5'));
+
+
+#90) same membershipTerm with multiple membershipTermCost
+INSERT INTO smoke_test_report_for_template (errorMsg,passFlag,errorCount,sqlStatement)
+SELECT 'same membershipTerm with multiple membershipTermCost',IF(COUNT(*)>0,'Fail','Pass') result,COUNT(*) number,'SELECT * from z_newcreate_template_transaction_table where transactionType in(''membership'') and (length(trim(membershipTermName))>0 and length(trim(membershipTermCost))>0) GROUP BY membershipTermName,membershipTermUnit,membershipTermDuration HAVING count(DISTINCT membershipTermCost)>1'
+from (SELECT * from z_newcreate_template_transaction_table where transactionType in('membership') and (length(trim(membershipTermName))>0 and length(trim(membershipTermCost))>0) GROUP BY membershipTermName,membershipTermUnit,membershipTermDuration HAVING count(DISTINCT membershipTermCost)>1) a;
+
+#91) membershipStartDate > membershipEndDate
+INSERT INTO smoke_test_report_for_template (errorMsg,passFlag,errorCount,sqlStatement)
+SELECT 'membershipStartDate > membershipEndDate',IF(COUNT(*)>0,'Fail','Pass') result,COUNT(*) number,'SELECT * from z_newcreate_template_transaction_table where transactionType in(''membership'') and (length(trim(membershipEndDate))>0 and length(trim(membershipStartDate))>0 and membershipStartDate>membershipEndDate)'
+from z_newcreate_template_transaction_table where transactionType in('membership') and (length(trim(membershipEndDate))>0 and length(trim(membershipStartDate))>0 and membershipStartDate>membershipEndDate) ;
+
+#92) organization account can't have household group membership
+INSERT INTO smoke_test_report_for_template (errorMsg,passFlag,errorCount,sqlStatement)
+SELECT 'organization account can''t have household group membership',IF(COUNT(*)>0,'Fail','Pass') result,COUNT(*) number,'SELECT * from z_newcreate_template_transaction_table where transactionType in(''membership'') and (membershipGroupType=2 and isCompanyAccount=1)'
+from z_newcreate_template_transaction_table where transactionType in('membership') and (membershipGroupType=2 and isCompanyAccount=1);
+
+
+#93) individual account can't have organization group membership
+#UPDATE z_newcreate_template_transaction_table zjd, z_newcreate_template_membership_level zj set zjd.membershipGroupType=zj.membershipGroupType where zjd.membershipLinkingId=zj.membershipLinkingId;
+
+INSERT INTO smoke_test_report_for_template (errorMsg,passFlag,errorCount,sqlStatement)
+SELECT 'individual account can''t have organization group membership',IF(COUNT(*)>0,'Fail','Pass') result,COUNT(*) number,'SELECT * from z_newcreate_template_transaction_table where transactionType in(''membership'') and (membershipGroupType=1 and isCompanyAccount=0)'
+from z_newcreate_template_transaction_table where transactionType in('membership') and (membershipGroupType=1 and isCompanyAccount=0);
+
+
+#94) membership row have eventName
+INSERT INTO smoke_test_report_for_template (errorMsg,passFlag,errorCount,sqlStatement)
+SELECT 'membership row have event',IF(COUNT(*)>0,'Fail','Pass') result,COUNT(*) number,'SELECT * from z_newcreate_template_transaction_table where transactionType in(''membership'') and (length(trim(eventName))>0 or length(trim(eventLinkingId))>0)'
+from z_newcreate_template_transaction_table where transactionType in('membership') and (length(trim(eventName))>0 or length(trim(eventLinkingId))>0);
+
+#95) membership row have eventCategory or eventTopic
+INSERT INTO smoke_test_report_for_template (errorMsg,passFlag,errorCount,sqlStatement)
+SELECT 'membership row have eventCategory or eventTopic',IF(COUNT(*)>0,'Fail','Pass') result,COUNT(*) number,'SELECT * from z_newcreate_template_transaction_table where transactionType in(''membership'') and (length(trim(eventCategory))>0 or length(trim(eventTopic))>0)'
+from z_newcreate_template_transaction_table where transactionType in('membership') and (length(trim(eventCategory))>0 or length(trim(eventTopic))>0);
+
+#96) membership row have eventSessionName or eventTicketName
+INSERT INTO smoke_test_report_for_template (errorMsg,passFlag,errorCount,sqlStatement)
+SELECT 'membership row have eventSessionName or eventTicketName',IF(COUNT(*)>0,'Fail','Pass') result,COUNT(*) number,'SELECT * from z_newcreate_template_transaction_table where transactionType in(''membership'') and (length(trim(eventSessionName))>0 or length(trim(eventTicketName))>0)'
+from z_newcreate_template_transaction_table where transactionType in('membership') and (length(trim(eventSessionName))>0 or length(trim(eventTicketName))>0);
+
+#97) membership row have attendeeCount or attendeeName
+INSERT INTO smoke_test_report_for_template (errorMsg,passFlag,errorCount,sqlStatement)
+SELECT 'membership row have attendeeCount or attendeeName',IF(COUNT(*)>0,'Fail','Pass') result,COUNT(*) number,'SELECT * from z_newcreate_template_transaction_table where transactionType in(''membership'') and (length(trim(attendeeCount))>0 or length(trim(attendeeName))>0)'
+from z_newcreate_template_transaction_table where transactionType in('membership') and (length(trim(attendeeCount))>0 or length(trim(attendeeName))>0);
+
+#98) membership row have giftAmount
+INSERT INTO smoke_test_report_for_template (errorMsg,passFlag,errorCount,sqlStatement)
+SELECT 'membership row have giftAmount',IF(COUNT(*)>0,'Fail','Pass') result,COUNT(*) number,'SELECT * from z_newcreate_template_transaction_table where transactionType in(''membership'') and (length(trim(giftAmount))>0)'
+from z_newcreate_template_transaction_table where transactionType in('membership') and (length(trim(giftAmount))>0);
+
+#99) membership row have productName
+INSERT INTO smoke_test_report_for_template (errorMsg,passFlag,errorCount,sqlStatement)
+SELECT 'membership row have product',IF(COUNT(*)>0,'Fail','Pass') result,COUNT(*) number,'SELECT * from z_newcreate_template_transaction_table where transactionType in(''membership'') and (length(trim(productName))>0 or length(trim(productLinkingId))>0)'
+from z_newcreate_template_transaction_table where transactionType in('membership') and (length(trim(productName))>0 or length(trim(productLinkingId))>0);
+
+#100) membership row have productQuantity
+INSERT INTO smoke_test_report_for_template (errorMsg,passFlag,errorCount,sqlStatement)
+SELECT 'membership row have productQuantity',IF(COUNT(*)>0,'Fail','Pass') result,COUNT(*) number,'SELECT * from z_newcreate_template_transaction_table where transactionType in(''membership'') and (length(trim(productQuantity))>0)'
+from z_newcreate_template_transaction_table where transactionType in('membership') and (length(trim(productQuantity))>0);
+
+#101) membership row have productChoice
+INSERT INTO smoke_test_report_for_template (errorMsg,passFlag,errorCount,sqlStatement)
+SELECT 'membership row have productChoice',IF(COUNT(*)>0,'Fail','Pass') result,COUNT(*) number,'SELECT * from z_newcreate_template_transaction_table where transactionType in(''membership'') and  (length(trim(productChoiceOption1))>0 or length(trim(productChoiceName1))>0 or length(trim(productChoiceOption2))>0 or length(trim(productChoiceName2))>0 or length(trim(productChoiceOption3))>0 or length(trim(productChoiceName3))>0)'
+from z_newcreate_template_transaction_table where transactionType in('membership') and (length(trim(productChoiceOption1))>0 or length(trim(productChoiceName1))>0 or length(trim(productChoiceOption2))>0 or length(trim(productChoiceName2))>0 or length(trim(productChoiceOption3))>0 or length(trim(productChoiceName3))>0);
+
+#102) membershipLevel contain lift need import as lifetime membership
+INSERT INTO smoke_test_report_for_template (errorMsg,passFlag,errorCount,sqlStatement)
+SELECT 'membershipLevel contain lift need import as lifetime membership',IF(COUNT(*)>0,'Fail','Pass') result,COUNT(*) number,'SELECT * from z_newcreate_template_transaction_table where transactionType in(''membership'') and  (length(trim(membershipLevel))>0 and membershipLevel like ''%life%'' and membershipTermUnit not in (''life'',''4''))'
+from z_newcreate_template_transaction_table where transactionType in('membership') and (length(trim(membershipLevel))>0 and membershipLevel like '%life%' and membershipTermUnit not in ('life','4'));
+
+
+#103) membershipLinkingId is invalid
+INSERT INTO smoke_test_report_for_template (errorMsg,passFlag,errorCount,sqlStatement)
+SELECT 'membershipLinkingId is invalid',IF(COUNT(*)>0,'Fail','Pass') result,COUNT(*) number,'SELECT * from z_newcreate_template_transaction_table where transactionType in(''membership'') and  (length(trim(membershipLinkingId))>0 and membershipLinkingId not in (SELECT membershipLinkingId from z_newcreate_template_membership_level where length(trim(membershipLinkingId))>0))'
+from z_newcreate_template_transaction_table where transactionType in('membership') and (length(trim(membershipLinkingId))>0 and membershipLinkingId not in (SELECT membershipLinkingId from z_newcreate_template_membership_level where length(trim(membershipLinkingId))>0 ));
+
+
+#104) membership rows but membership is blank
+INSERT INTO smoke_test_report_for_template (errorMsg,passFlag,errorCount,sqlStatement)
+SELECT 'membership rows but membership is blank',IF(COUNT(*)>0,'Fail','Pass') result,COUNT(*) number,'SELECT * from z_newcreate_template_transaction_table where transactionType in(''membership'') and  (membershipLevel is null and membershipLinkingId is null)'
+from z_newcreate_template_transaction_table where transactionType in('membership') and (membershipLevel is null and membershipLinkingId is null);
+
+##105) membershipLinkingId and membershiplevel both populated
+INSERT INTO smoke_test_report_for_template (errorMsg,passFlag,errorCount,sqlStatement)
+SELECT 'membershipLinkingId and membershiplevel both populated',IF(COUNT(*)>0,'Fail','Pass') result,COUNT(*) number,'SELECT * from z_newcreate_template_transaction_table where transactionType in(''membership'') and  (membershipLevel is not null and membershipLinkingId is not null)'
+from z_newcreate_template_transaction_table where transactionType in('membership') and (membershipLinkingId is not null and membershiplevel is not null);
+
+
+####################################################event
+
+#106) eventLinkingId is invalid
+
+INSERT INTO smoke_test_report_for_template (errorMsg,passFlag,errorCount,sqlStatement)
+SELECT 'eventLinkingId is invalid',IF(COUNT(*)>0,'Fail','Pass') result,COUNT(*) number,'SELECT * from z_newcreate_template_transaction_table where transactionType in(''event registration'') and (length(trim(eventLinkingId))>0 and eventLinkingId not in (SELECT eventLinkingId from z_newcreate_template_event where length(trim(eventLinkingId))>0))'
+from z_newcreate_template_transaction_table where transactionType in('event registration') and (length(trim(eventLinkingId))>0 and eventLinkingId not in (SELECT eventLinkingId from z_newcreate_template_event where length(trim(eventLinkingId))>0 ));
+
+
+#107) same event with multiple eventCode
+INSERT INTO smoke_test_report_for_template (errorMsg,passFlag,errorCount,sqlStatement)
+SELECT 'same event with multiple eventCode',IF(COUNT(*)>0,'Fail','Pass') result,COUNT(*) number,'SELECT * from z_newcreate_template_transaction_table where transactionType in(''event registration'') and (length(trim(eventName))>0 and length(trim(eventCode))>0) GROUP BY eventName HAVING count(DISTINCT eventCode)>1'
+from (SELECT * from z_newcreate_template_transaction_table where transactionType in('event registration') and (length(trim(eventName))>0 and length(trim(eventCode))>0) GROUP BY eventName HAVING count(DISTINCT eventCode)>1) a;
+
+
+
+
+#108) same event with multiple eventCategory
+INSERT INTO smoke_test_report_for_template (errorMsg,passFlag,errorCount,sqlStatement)
+SELECT 'same event with multiple eventCategory',IF(COUNT(*)>0,'Fail','Pass') result,COUNT(*) number,'SELECT * from z_newcreate_template_transaction_table where transactionType in(''event registration'') and (length(trim(eventName))>0 and length(trim(eventCategory))>0) GROUP BY eventName HAVING count(DISTINCT eventCategory)>1'
+from (SELECT * from z_newcreate_template_transaction_table where transactionType in('event registration') and (length(trim(eventName))>0 and length(trim(eventCategory))>0) GROUP BY eventName HAVING count(DISTINCT eventCategory)>1) a;
+
+#109) same event with multiple eventTopic
+INSERT INTO smoke_test_report_for_template (errorMsg,passFlag,errorCount,sqlStatement)
+SELECT 'same event with multiple eventTopic',IF(COUNT(*)>0,'Fail','Pass') result,COUNT(*) number,'SELECT * from z_newcreate_template_transaction_table where transactionType in(''event registration'') and (length(trim(eventName))>0 and length(trim(eventTopic))>0) GROUP BY eventName HAVING count(DISTINCT eventTopic)>1'
+from (SELECT * from z_newcreate_template_transaction_table where transactionType in('event registration') and (length(trim(eventName))>0 and length(trim(eventTopic))>0) GROUP BY eventName HAVING count(DISTINCT eventTopic)>1) a;
+
+#110) event have ticket but some event_reg rows not have ticket(这个默认导一个Unknown 的 ticket)
+
+
+#111) attendeeCount=0 or is negative
+INSERT INTO smoke_test_report_for_template (errorMsg,passFlag,errorCount,sqlStatement)
+SELECT 'attendeeCount=0 or is negative ',IF(COUNT(*)>0,'Fail','Pass') result,COUNT(*) number,'SELECT * from z_newcreate_template_transaction_table where (transactionType in(''event registration'') or parentTransactionType in(''event registration'') ) and (length(trim(attendeeCount))>0 and attendeeCount+0<=0)'
+from z_newcreate_template_transaction_table where (transactionType in('event registration') or parentTransactionType in('event registration')) and (length(trim(attendeeCount))>0 and attendeeCount+0<=0);
+
+
+#112) registrantIsAttendee is not normal values
+
+INSERT INTO smoke_test_report_for_template (errorMsg,passFlag,errorCount,sqlStatement)
+SELECT 'registrantIsAttendee is not normal values',IF(COUNT(*)>0,'Fail','Pass') result,COUNT(*) number,'SELECT * from z_newcreate_template_transaction_table where (transactionType in(''event registration'') or parentTransactionType in(''event registration'') ) and (length(trim(registrantIsAttendee))>0 and registrantIsAttendee not in (''Y'',''N'',''Yes'',''No'',''1'',''0'',''True'',''Flase''))'
+from z_newcreate_template_transaction_table where (transactionType in('event registration') or parentTransactionType in('event registration') ) and (length(trim(registrantIsAttendee))>0 and registrantIsAttendee not in ('Y','N','Yes','No','1','0','True','Flase'));
+
+#113) isAttended not 0 or 1
+
+INSERT INTO smoke_test_report_for_template (errorMsg,passFlag,errorCount,sqlStatement)
+SELECT 'isAttended not 0 or 1',IF(COUNT(*)>0,'Fail','Pass') result,COUNT(*) number,'SELECT * from z_newcreate_template_transaction_table where (transactionType in(''event registration'') or parentTransactionType in(''event registration'') ) and (length(trim(registrantIsAttendee))>0 and registrantIsAttendee not in (''Y'',''N'',''Yes'',''No'',''1'',''0'',''True'',''Flase''))'
+from z_newcreate_template_transaction_table where (transactionType in('event registration') or parentTransactionType in('event registration') ) and (length(trim(registrantIsAttendee))>0 and registrantIsAttendee not in ('Y','N','Yes','No','1','0','True','Flase'));
+
+
+#114) event rows without event
+INSERT INTO smoke_test_report_for_template (errorMsg,passFlag,errorCount,sqlStatement)
+SELECT 'isAttended not 0 or 1',IF(COUNT(*)>0,'Fail','Pass') result,COUNT(*) number,'SELECT * from z_newcreate_template_transaction_table where  transactionType in(''event registration'') and (eventName is null  and eventLinkingId is null)'
+from z_newcreate_template_transaction_table where transactionType in('event registration') and (eventName is null  and eventLinkingId is null);
+
+
+#115) event have fairMarketValue
+INSERT INTO smoke_test_report_for_template (errorMsg,passFlag,errorCount,sqlStatement)
+SELECT 'event have fairMarketValue',IF(COUNT(*)>0,'Fail','Pass') result,COUNT(*) number,'SELECT * from z_newcreate_template_transaction_table where  transactionType in(''event registration'') and (length(trim(fairMarketValue))>0 and fairMarketValue+0>0 )'
+from z_newcreate_template_transaction_table where transactionType in('event registration') and (length(trim(fairMarketValue))>0 and fairMarketValue+0>0 );
+
+#116) event have fund
+INSERT INTO smoke_test_report_for_template (errorMsg,passFlag,errorCount,sqlStatement)
+SELECT 'event have fund',IF(COUNT(*)>0,'Fail','Pass') result,COUNT(*) number,'SELECT * from z_newcreate_template_transaction_table where  transactionType in(''event registration'') and (length(trim(fundName))>0 or length(trim(fundLinkingId))>0)'
+from z_newcreate_template_transaction_table where transactionType in('event registration') and (length(trim(fundName))>0 or length(trim(fundLinkingId))>0);
+
+#117) event have campaign
+INSERT INTO smoke_test_report_for_template (errorMsg,passFlag,errorCount,sqlStatement)
+SELECT 'event have campaign',IF(COUNT(*)>0,'Fail','Pass') result,COUNT(*) number,'SELECT * from z_newcreate_template_transaction_table where  transactionType in(''event registration'') and (length(trim(campaignName))>0 or length(trim(campaignLinkingId))>0)'
+from z_newcreate_template_transaction_table where transactionType in('event registration') and (length(trim(campaignName))>0 or length(trim(campaignLinkingId))>0);
+
+#118) event have purpose
+INSERT INTO smoke_test_report_for_template (errorMsg,passFlag,errorCount,sqlStatement)
+SELECT 'event have purpose',IF(COUNT(*)>0,'Fail','Pass') result,COUNT(*) number,'SELECT * from z_newcreate_template_transaction_table where  transactionType in(''event registration'') and (length(trim(purposeName))>0 or length(trim(purposeLinkingId))>0)'
+from z_newcreate_template_transaction_table where transactionType in('event registration') and (length(trim(purposeName))>0 or length(trim(purposeLinkingId))>0);
+
+
+#119) event have honorMemory
+INSERT INTO smoke_test_report_for_template (errorMsg,passFlag,errorCount,sqlStatement)
+SELECT 'event have honorMemory',IF(COUNT(*)>0,'Fail','Pass') result,COUNT(*) number,'SELECT * from z_newcreate_template_transaction_table where  transactionType in(''event registration'') and (length(trim(honorMemoryName))>0 or length(trim(honorMemoryType))>0)'
+from z_newcreate_template_transaction_table where transactionType in('event registration') and (length(trim(honorMemoryName))>0 or length(trim(honorMemoryType))>0);
+
+#120) event have solicitationMethod
+INSERT INTO smoke_test_report_for_template (errorMsg,passFlag,errorCount,sqlStatement)
+SELECT 'event have solicitationMethod',IF(COUNT(*)>0,'Fail','Pass') result,COUNT(*) number,'SELECT * from z_newcreate_template_transaction_table where  transactionType in(''event registration'') and (length(trim(solicitationMethod))>0 or length(trim(solicitationMethodLinkingId))>0)'
+from z_newcreate_template_transaction_table where transactionType in('event registration') and (length(trim(solicitationMethod))>0 or length(trim(solicitationMethodLinkingId))>0);
+
+
+#121) event have acknowledge
+INSERT INTO smoke_test_report_for_template (errorMsg,passFlag,errorCount,sqlStatement)
+SELECT 'event have acknowledge',IF(COUNT(*)>0,'Fail','Pass') result,COUNT(*) number,'SELECT * from z_newcreate_template_transaction_table where  transactionType in(''event registration'') and (length(trim(acknowledgeName))>0 or length(trim(acknowledgeAccountLinkingId))>0)'
+from z_newcreate_template_transaction_table where transactionType in('event registration') and (length(trim(acknowledgeName))>0 or length(trim(acknowledgeAccountLinkingId))>0);
+
+
+#122) event have fundraiser
+INSERT INTO smoke_test_report_for_template (errorMsg,passFlag,errorCount,sqlStatement)
+SELECT 'event have fundraiser',IF(COUNT(*)>0,'Fail','Pass') result,COUNT(*) number,'SELECT * from z_newcreate_template_transaction_table where  transactionType in(''event registration'') and (length(trim(fundraiserName))>0 or length(trim(fundraiserLinkingId))>0)'
+from z_newcreate_template_transaction_table where transactionType in('event registration') and (length(trim(fundraiserName))>0 or length(trim(fundraiserLinkingId))>0);
+
+
+#123) event have donorNote or donorName
+INSERT INTO smoke_test_report_for_template (errorMsg,passFlag,errorCount,sqlStatement)
+SELECT 'event have donorNote or donorName',IF(COUNT(*)>0,'Fail','Pass') result,COUNT(*) number,'SELECT * from z_newcreate_template_transaction_table where  transactionType in(''event registration'') and (length(trim(donorNote))>0 or length(trim(donorName))>0)'
+from z_newcreate_template_transaction_table where transactionType in('event registration') and (length(trim(donorNote))>0 or length(trim(donorName))>0);
+
+
+#124) event is keepAnonymous
+INSERT INTO smoke_test_report_for_template (errorMsg,passFlag,errorCount,sqlStatement)
+SELECT 'event event is keepAnonymous',IF(COUNT(*)>0,'Fail','Pass') result,COUNT(*) number,'SELECT * from z_newcreate_template_transaction_table where  transactionType in(''event registration'') and (length(trim(keepAnonymous))>0 and keepAnonymous<>''0'')'
+from z_newcreate_template_transaction_table where transactionType in('event registration') and (length(trim(keepAnonymous))>0 and keepAnonymous<>'0');
+
+
+#125) event have batchNumber
+INSERT INTO smoke_test_report_for_template (errorMsg,passFlag,errorCount,sqlStatement)
+SELECT 'event have batchNumber',IF(COUNT(*)>0,'Fail','Pass') result,COUNT(*) number,'SELECT * from z_newcreate_template_transaction_table where  transactionType in(''event registration'') and (length(trim(batchNumber))>0)'
+from z_newcreate_template_transaction_table where transactionType in('event registration') and (length(trim(batchNumber))>0);
+
+#126) event have membership
+INSERT INTO smoke_test_report_for_template (errorMsg,passFlag,errorCount,sqlStatement)
+SELECT 'event have membership',IF(COUNT(*)>0,'Fail','Pass') result,COUNT(*) number,'SELECT * from z_newcreate_template_transaction_table where  transactionType in(''event registration'') and (length(trim(membershipLinkingId))>0 or length(trim(membershipLevel))>0)'
+from z_newcreate_template_transaction_table where transactionType in('event registration') and (length(trim(membershipLevel))>0 or length(trim(membershipLinkingId))>0);
+
+
+#127) event have membershipEnrollmentType
+INSERT INTO smoke_test_report_for_template (errorMsg,passFlag,errorCount,sqlStatement)
+SELECT 'event have membershipEnrollmentType',IF(COUNT(*)>0,'Fail','Pass') result,COUNT(*) number,'SELECT * from z_newcreate_template_transaction_table where  transactionType in(''event registration'') and (length(trim(membershipEnrollmentType))>0)'
+from z_newcreate_template_transaction_table where transactionType in('event registration') and (length(trim(membershipEnrollmentType))>0);
+
+#128) event have membershipTermName or membershipTermCost
+INSERT INTO smoke_test_report_for_template (errorMsg,passFlag,errorCount,sqlStatement)
+SELECT 'event have membershipTermName or membershipTermCost ',IF(COUNT(*)>0,'Fail','Pass') result,COUNT(*) number,'SELECT * from z_newcreate_template_transaction_table where  transactionType in(''event registration'') and (length(trim(membershipTermName))>0 or length(trim(membershipTermCost))>0)'
+from z_newcreate_template_transaction_table where transactionType in('event registration') and (length(trim(membershipTermName))>0 or length(trim(membershipTermCost))>0);
+
+#129) event have membershipStartDate or membershipEndDate
+INSERT INTO smoke_test_report_for_template (errorMsg,passFlag,errorCount,sqlStatement)
+SELECT 'event have membershipStartDate or membershipEndDate ',IF(COUNT(*)>0,'Fail','Pass') result,COUNT(*) number,'SELECT * from z_newcreate_template_transaction_table where  transactionType in(''event registration'') and (length(trim(membershipStartDate))>0 or length(trim(membershipEndDate))>0)'
+from z_newcreate_template_transaction_table where transactionType in('event registration') and (length(trim(membershipStartDate))>0 or length(trim(membershipEndDate))>0);
+
+
+#130) event have product
+INSERT INTO smoke_test_report_for_template (errorMsg,passFlag,errorCount,sqlStatement)
+SELECT 'event have membershipStartDate or membershipEndDate',IF(COUNT(*)>0,'Fail','Pass') result,COUNT(*) number,'SELECT * from z_newcreate_template_transaction_table where  transactionType in(''event registration'') and (length(trim(productName))>0 or length(trim(productLinkingId))>0)'
+from z_newcreate_template_transaction_table where transactionType in('event registration') and (length(trim(productName))>0 or length(trim(productLinkingId))>0);
+
+
+#131) event have product
+INSERT INTO smoke_test_report_for_template (errorMsg,passFlag,errorCount,sqlStatement)
+SELECT 'event have membershipStartDate or membershipEndDate',IF(COUNT(*)>0,'Fail','Pass') result,COUNT(*) number,'SELECT * from z_newcreate_template_transaction_table where  transactionType in(''event registration'') and (length(trim(productName))>0 or length(trim(productLinkingId))>0)'
+from z_newcreate_template_transaction_table where transactionType in('event registration') and (length(trim(productName))>0 or length(trim(productLinkingId))>0);
+
+#132) event have productQuantity
+INSERT INTO smoke_test_report_for_template (errorMsg,passFlag,errorCount,sqlStatement)
+SELECT 'event have productQuantity',IF(COUNT(*)>0,'Fail','Pass') result,COUNT(*) number,'SELECT * from z_newcreate_template_transaction_table where  transactionType in(''event registration'') and (length(trim(productQuantity))>0 and productQuantity+0>0)'
+from z_newcreate_template_transaction_table where transactionType in('event registration') and (length(trim(productQuantity))>0 and productQuantity+0>0);
+
+#133) event have productChoice
+INSERT INTO smoke_test_report_for_template (errorMsg,passFlag,errorCount,sqlStatement)
+SELECT 'event have productQuantity',IF(COUNT(*)>0,'Fail','Pass') result,COUNT(*) number,'SELECT * from z_newcreate_template_transaction_table where  transactionType in(''event registration'') and (length(trim(productChoiceOption1))>0 or length(trim(productChoiceName1))>0 or length(trim(productChoiceOption2))>0 or length(trim(productChoiceName2))>0 or length(trim(productChoiceOption3))>0 or length(trim(productChoiceName3))>0)'
+from z_newcreate_template_transaction_table where transactionType in('event registration') and (length(trim(productChoiceOption1))>0 or length(trim(productChoiceName1))>0 or length(trim(productChoiceOption2))>0 or length(trim(productChoiceName2))>0 or length(trim(productChoiceOption3))>0 or length(trim(productChoiceName3))>0);
+
+#######################################product
+#134) product rows without product
+INSERT INTO smoke_test_report_for_template (errorMsg,passFlag,errorCount,sqlStatement)
+SELECT 'product rows without product',IF(COUNT(*)>0,'Fail','Pass') result,COUNT(*) number,'SELECT * from z_newcreate_template_transaction_table where transactionType in(''product'') and (productName is null  and productLinkingId is null)'
+from z_newcreate_template_transaction_table where transactionType in('product') and (productName is null  and productLinkingId is null);
+
+#135) same productName with multiple productCode
+INSERT INTO smoke_test_report_for_template (errorMsg,passFlag,errorCount,sqlStatement)
+SELECT 'product rows without product',IF(COUNT(*)>0,'Fail','Pass') result,COUNT(*) number,'SELECT * from  z_newcreate_template_transaction_table where transactionType in(''product'') and (length(trim(productName))>0 and length(trim(productCode))>0) GROUP BY productName HAVING count(DISTINCT productCode)>1'
+from (SELECT * from  z_newcreate_template_transaction_table where transactionType in('product') and (length(trim(productName))>0 and length(trim(productCode))>0) GROUP BY productName HAVING count(DISTINCT productCode)>1) a;
+
+#136) productLinkingId is invalid
+
+
+INSERT INTO smoke_test_report_for_template (errorMsg,passFlag,errorCount,sqlStatement)
+SELECT 'productLinkingId is invalid',IF(COUNT(*)>0,'Fail','Pass') result,COUNT(*) number,'SELECT * from z_newcreate_template_transaction_table where transactionType in(''product'') and  (length(trim(productLinkingId))>0 and productLinkingId not in (SELECT productLinkingId from z_newcreate_template_product where length(trim(productLinkingId))>0))'
+from z_newcreate_template_transaction_table where transactionType in('product') and (length(trim(productLinkingId))>0 and productLinkingId not in (SELECT productLinkingId from z_newcreate_template_product where length(trim(productLinkingId))>0));
+
+#137) productQuantity is 0 or negative
+INSERT INTO smoke_test_report_for_template (errorMsg,passFlag,errorCount,sqlStatement)
+SELECT 'productQuantity is 0 or negative',IF(COUNT(*)>0,'Fail','Pass') result,COUNT(*) number,'SELECT * from z_newcreate_template_transaction_table where transactionType in(''product'') and  (length(trim(productQuantity))>0 and productQuantity+0<=0)'
+from z_newcreate_template_transaction_table where transactionType in('product') and (length(trim(productQuantity))>0 and productQuantity+0<=0);
+
+
+#138) productChoice>3个
+INSERT INTO smoke_test_report_for_template (errorMsg,passFlag,errorCount,sqlStatement)
+SELECT 'productChoice>3',IF(COUNT(*)>0,'Fail','Pass') result,COUNT(*) number,'SELECT * from product_choices GROUP BY productId HAVING count(*)>3'
+from (SELECT * from product_choices GROUP BY productId HAVING count(*)>3) a ;
+
+
+#237 store purchase can not have 2 or more different productChoiceOptions in the same one productChoiceName
+INSERT INTO smoke_test_report_for_template (errorMsg,passFlag,errorCount,sqlStatement)
+SELECT 'store purchase can not have 2 or more different productChoiceOptions in the same one productChoiceName',IF(COUNT(*)>0,'Fail','Pass') result,COUNT(*) number,'SELECT * from z_newcreate_template_transaction_table where transactionType in(''product'') and ((length(trim(productChoiceName1))>0 and productChoiceName1=productChoiceName2 and length(trim(productChoiceOption1))>0 and length(trim(productChoiceOption2))>0 and productChoiceOption1<>productChoiceOption2) or (length(trim(productChoiceName1))>0 and productChoiceName1=productChoiceName3 and length(trim(productChoiceOption1))>0 and length(trim(productChoiceOption3))>0 and productChoiceOption1<>productChoiceOption3) or (length(trim(productChoiceName2))>0 and productChoiceName1=productChoiceName3 and length(trim(productChoiceOption2))>0 and length(trim(productChoiceOption3))>0 and productChoiceOption2<>productChoiceOption3))'
+from z_newcreate_template_transaction_table where transactionType in('product') and ((length(trim(productChoiceName1))>0 and productChoiceName1=productChoiceName2 and length(trim(productChoiceOption1))>0 and length(trim(productChoiceOption2))>0 and productChoiceOption1<>productChoiceOption2) or (length(trim(productChoiceName1))>0 and productChoiceName1=productChoiceName3 and length(trim(productChoiceOption1))>0 and length(trim(productChoiceOption3))>0 and productChoiceOption1<>productChoiceOption3) or (length(trim(productChoiceName2))>0 and productChoiceName1=productChoiceName3 and length(trim(productChoiceOption2))>0 and length(trim(productChoiceOption3))>0 and productChoiceOption2<>productChoiceOption3));
+
+#139) product rows have fairMarketValue
+INSERT INTO smoke_test_report_for_template (errorMsg,passFlag,errorCount,sqlStatement)
+SELECT 'product rows have fairMarketValue',IF(COUNT(*)>0,'Fail','Pass') result,COUNT(*) number,'SELECT * from z_newcreate_template_transaction_table where transactionType in(''product'') and  (length(trim(fairMarketValue))>0 and fairMarketValue+0>0)'
+from z_newcreate_template_transaction_table where transactionType in('product') and (length(trim(fairMarketValue))>0 and fairMarketValue+0>0);
+
+#140) product rows have fund
+INSERT INTO smoke_test_report_for_template (errorMsg,passFlag,errorCount,sqlStatement)
+SELECT 'product rows have fund',IF(COUNT(*)>0,'Fail','Pass') result,COUNT(*) number,'SELECT * from z_newcreate_template_transaction_table where transactionType in(''product'') and  (length(trim(fundName))>0 or length(trim(fundLinkingId))>0)'
+from z_newcreate_template_transaction_table where transactionType in('product') and (length(trim(fundName))>0 or length(trim(fundLinkingId))>0);
+
+
+#141) product rows have campaign
+INSERT INTO smoke_test_report_for_template (errorMsg,passFlag,errorCount,sqlStatement)
+SELECT 'product rows have campaign',IF(COUNT(*)>0,'Fail','Pass') result,COUNT(*) number,'SELECT * from z_newcreate_template_transaction_table where transactionType in(''product'') and (length(trim(campaignName))>0 or length(trim(campaignLinkingId))>0)'
+from z_newcreate_template_transaction_table where transactionType in('product') and (length(trim(campaignName))>0 or length(trim(campaignLinkingId))>0);
+
+#142) product rows have purpose
+INSERT INTO smoke_test_report_for_template (errorMsg,passFlag,errorCount,sqlStatement)
+SELECT 'product rows have purpose',IF(COUNT(*)>0,'Fail','Pass') result,COUNT(*) number,'SELECT * from z_newcreate_template_transaction_table where transactionType in(''product'') and (length(trim(purposeName))>0 or length(trim(purposeLinkingId))>0)'
+from z_newcreate_template_transaction_table where transactionType in('product') and (length(trim(purposeName))>0 or length(trim(purposeLinkingId))>0);
+
+#143) product rows have honorMemory
+INSERT INTO smoke_test_report_for_template (errorMsg,passFlag,errorCount,sqlStatement)
+SELECT 'product rows have honorMemory',IF(COUNT(*)>0,'Fail','Pass') result,COUNT(*) number,'SELECT * from z_newcreate_template_transaction_table where transactionType in(''product'') and (length(trim(honorMemoryName))>0 or length(trim(honorMemoryType))>0)'
+from z_newcreate_template_transaction_table where transactionType in('product') and (length(trim(honorMemoryName))>0 or length(trim(honorMemoryType))>0);
+
+#144) product rows have solicitationMethod
+INSERT INTO smoke_test_report_for_template (errorMsg,passFlag,errorCount,sqlStatement)
+SELECT 'product rows have solicitationMethod',IF(COUNT(*)>0,'Fail','Pass') result,COUNT(*) number,'SELECT * from z_newcreate_template_transaction_table where transactionType in(''product'') and (length(trim(solicitationMethod))>0 or length(trim(solicitationMethodLinkingId))>0)'
+from z_newcreate_template_transaction_table where transactionType in('product') and (length(trim(solicitationMethod))>0 or length(trim(solicitationMethodLinkingId))>0);
+
+
+#145) product rows have acknowledgeName
+INSERT INTO smoke_test_report_for_template (errorMsg,passFlag,errorCount,sqlStatement)
+SELECT 'product rows have acknowledgeName',IF(COUNT(*)>0,'Fail','Pass') result,COUNT(*) number,'SELECT * from z_newcreate_template_transaction_table where transactionType in(''product'') and (length(trim(acknowledgeName))>0 or length(trim(acknowledgeAccountLinkingId))>0)'
+from z_newcreate_template_transaction_table where transactionType in('product') and (length(trim(acknowledgeName))>0 or length(trim(acknowledgeAccountLinkingId))>0);
+
+
+#146) product rows have solicitorName
+INSERT INTO smoke_test_report_for_template (errorMsg,passFlag,errorCount,sqlStatement)
+SELECT 'product rows have solicitorName',IF(COUNT(*)>0,'Fail','Pass') result,COUNT(*) number,'SELECT * from z_newcreate_template_transaction_table where transactionType in(''product'') and (length(trim(solicitorName))>0 or length(trim(solicitorAccountLinkingId))>0)'
+from z_newcreate_template_transaction_table where transactionType in('product') and (length(trim(solicitorName))>0 or length(trim(solicitorAccountLinkingId))>0);
+
+
+#147) product rows have fundraiserName
+INSERT INTO smoke_test_report_for_template (errorMsg,passFlag,errorCount,sqlStatement)
+SELECT 'product rows have fundraiserName',IF(COUNT(*)>0,'Fail','Pass') result,COUNT(*) number,'SELECT * from z_newcreate_template_transaction_table where transactionType in(''product'') and (length(trim(fundraiserName))>0 or length(trim(fundraiserLinkingId))>0)'
+from z_newcreate_template_transaction_table where transactionType in('product') and (length(trim(fundraiserName))>0 or length(trim(fundraiserLinkingId))>0);
+
+
+#148) product rows have donorNote or donorName
+INSERT INTO smoke_test_report_for_template (errorMsg,passFlag,errorCount,sqlStatement)
+SELECT 'product rows have donorNote or donorName',IF(COUNT(*)>0,'Fail','Pass') result,COUNT(*) number,'SELECT * from z_newcreate_template_transaction_table where transactionType in(''product'') and (length(trim(donorNote))>0 or length(trim(donorName))>0)'
+from z_newcreate_template_transaction_table where transactionType in('product') and (length(trim(donorNote))>0 or length(trim(donorName))>0);
+
+#149) product rows is keepAnonymous
+INSERT INTO smoke_test_report_for_template (errorMsg,passFlag,errorCount,sqlStatement)
+SELECT 'product rows is keepAnonymous',IF(COUNT(*)>0,'Fail','Pass') result,COUNT(*) number,'SELECT * from z_newcreate_template_transaction_table where transactionType in(''product'') and (length(trim(keepAnonymous))>0 and keepAnonymous<>''0'')'
+from z_newcreate_template_transaction_table where transactionType in('product') and (length(trim(keepAnonymous))>0 and keepAnonymous<>'0');
+
+#150) product rows have batchNumber
+INSERT INTO smoke_test_report_for_template (errorMsg,passFlag,errorCount,sqlStatement)
+SELECT 'product rows have batchNumber',IF(COUNT(*)>0,'Fail','Pass') result,COUNT(*) number,'SELECT * from z_newcreate_template_transaction_table where transactionType in(''product'') and (length(trim(batchNumber))>0)'
+from z_newcreate_template_transaction_table where transactionType in('product') and (length(trim(batchNumber))>0);
+
+#151) product rows have membershipLevel
+INSERT INTO smoke_test_report_for_template (errorMsg,passFlag,errorCount,sqlStatement)
+SELECT 'product rows have membershipLevel',IF(COUNT(*)>0,'Fail','Pass') result,COUNT(*) number,'SELECT * from z_newcreate_template_transaction_table where transactionType in(''product'') and (length(trim(membershipLevel))>0 or length(trim(membershipLinkingId))>0)'
+from z_newcreate_template_transaction_table where transactionType in('product') and (length(trim(membershipLevel))>0 or length(trim(membershipLinkingId))>0);
+
+#152) product rows have membershipEnrollmentType
+INSERT INTO smoke_test_report_for_template (errorMsg,passFlag,errorCount,sqlStatement)
+SELECT 'product rows have membershipEnrollmentType',IF(COUNT(*)>0,'Fail','Pass') result,COUNT(*) number,'SELECT * from z_newcreate_template_transaction_table where transactionType in(''product'') and (length(trim(membershipEnrollmentType))>0)'
+from z_newcreate_template_transaction_table where transactionType in('product') and (length(trim(membershipEnrollmentType))>0);
+
+#153) product rows have membershipTermName or membershipTermCost
+INSERT INTO smoke_test_report_for_template (errorMsg,passFlag,errorCount,sqlStatement)
+SELECT 'product rows have membershipTermName or membershipTermCost',IF(COUNT(*)>0,'Fail','Pass') result,COUNT(*) number,'SELECT * from z_newcreate_template_transaction_table where transactionType in(''product'') and (length(trim(membershipTermName))>0 or length(trim(membershipTermCost))>0 )'
+from z_newcreate_template_transaction_table where transactionType in('product') and (length(trim(membershipTermName))>0 or length(trim(membershipTermCost))>0 );
+
+
+#154) product rows have membershipStartDate or membershipEndDate
+INSERT INTO smoke_test_report_for_template (errorMsg,passFlag,errorCount,sqlStatement)
+SELECT 'product rows have membershipStartDate or membershipEndDate',IF(COUNT(*)>0,'Fail','Pass') result,COUNT(*) number,'SELECT * from z_newcreate_template_transaction_table where transactionType in(''product'') and (length(trim(membershipStartDate))>0 or length(trim(membershipEndDate))>0 )'
+from z_newcreate_template_transaction_table where transactionType in('product') and (length(trim(membershipStartDate))>0 or length(trim(membershipEndDate))>0 );
+
+#155) product rows have event
+INSERT INTO smoke_test_report_for_template (errorMsg,passFlag,errorCount,sqlStatement)
+SELECT 'product rows have event',IF(COUNT(*)>0,'Fail','Pass') result,COUNT(*) number,'SELECT * from z_newcreate_template_transaction_table where transactionType in(''product'') and (length(trim(eventName))>0 or length(trim(eventLinkingId))>0 )'
+from z_newcreate_template_transaction_table where transactionType in('product') and (length(trim(eventName))>0 or length(trim(eventLinkingId))>0 );
+
+#156) product rows have eventSessionName or eventTicketName
+INSERT INTO smoke_test_report_for_template (errorMsg,passFlag,errorCount,sqlStatement)
+SELECT 'product rows have eventSessionName or eventTicketName',IF(COUNT(*)>0,'Fail','Pass') result,COUNT(*) number,'SELECT * from z_newcreate_template_transaction_table where transactionType in(''product'') and (length(trim(eventSessionName))>0 or length(trim(eventTicketName))>0 )'
+from z_newcreate_template_transaction_table where transactionType in('product') and (length(trim(eventSessionName))>0 or length(trim(eventTicketName))>0 );
+
+#157) product rows have attendeeCount or attendeeName
+INSERT INTO smoke_test_report_for_template (errorMsg,passFlag,errorCount,sqlStatement)
+SELECT 'product rows have attendeeCount or attendeeName',IF(COUNT(*)>0,'Fail','Pass') result,COUNT(*) number,'SELECT * from z_newcreate_template_transaction_table where transactionType in(''product'') and (length(trim(attendeeCount))>0 or length(trim(attendeeName))>0 )'
+from z_newcreate_template_transaction_table where transactionType in('product') and (length(trim(attendeeCount))>0 or length(trim(attendeeName))>0 );
+
+#158) product rows have giftAmount
+INSERT INTO smoke_test_report_for_template (errorMsg,passFlag,errorCount,sqlStatement)
+SELECT 'product rows have giftAmount',IF(COUNT(*)>0,'Fail','Pass') result,COUNT(*) number,'SELECT * from z_newcreate_template_transaction_table where transactionType in(''product'') and (length(trim(giftAmount))>0 and giftAmount+0>0)'
+from z_newcreate_template_transaction_table where transactionType in('product') and (length(trim(giftAmount))>0 and giftAmount+0>0);
+
+
+#159) product rows have transactionNote(默认会导成 payment note )
+INSERT INTO smoke_test_report_for_template (errorMsg,passFlag,errorCount,sqlStatement)
+SELECT 'product rows have transactionNote',IF(COUNT(*)>0,'Fail','Pass') result,COUNT(*) number,'SELECT * from z_newcreate_template_transaction_table where  (transactionType in(''product'') and (length(trim(transactionNote))>0)) OR ( parentTransactionType=''product'' and transactionType=''note'')'
+from z_newcreate_template_transaction_table where (transactionType in('product') and (length(trim(transactionNote))>0)) OR ( parentTransactionType='product' and transactionType='note');
+
+#160) product rows have softCredit
+INSERT INTO smoke_test_report_for_template (errorMsg,passFlag,errorCount,sqlStatement)
+SELECT 'product rows have softCredit',IF(COUNT(*)>0,'Fail','Pass') result,COUNT(*) number,'SELECT * from z_newcreate_template_transaction_table where (transactionType in(''product'') and length(trim(softCreditRecipientAccountLinkingId))>0) OR (transactionType=''soft credit'' and (parentTransactionLinkingId,parentTransactionLinkingIdSourceTable,parentTransactionLinkingSeq) in (SELECT transactionLinkingId,transactionLinkingIdSourceTable,transactionSeq from z_newcreate_template_transaction_table where transactionType =''product''))'
+from z_newcreate_template_transaction_table where (transactionType in('product') and length(trim(softCreditRecipientAccountLinkingId))>0) OR (transactionType='soft credit' and (parentTransactionLinkingId,parentTransactionLinkingIdSourceTable,parentTransactionLinkingSeq) in (SELECT transactionLinkingId,transactionLinkingIdSourceTable,transactionSeq from z_newcreate_template_transaction_table where transactionType ='product'));
+
+
+
+#############################soft credit
+
+#ALTER TABLE z_newcreate_template_transaction_table add solicatorId int DEFAULT null;
+
+#UPDATE z_newcreate_template_transaction_table zjd, z_newcreate_soft_credit zj set zjd.solicatorId=zj.solicatorId where zjd.rownumber=zj.rownumber;
+
+#161) softCreditRecipientAccountLinkingId is invalid
+INSERT INTO smoke_test_report_for_template (errorMsg,passFlag,errorCount,sqlStatement)
+SELECT 'softCreditRecipientAccountLinkingId is invalid',IF(COUNT(*)>0,'Fail','Pass') result,COUNT(*) number,'SELECT * from z_newcreate_template_transaction_table where (length(trim(softCreditRecipientAccountLinkingId))>0 and solicatorId is null)'
+from z_newcreate_template_transaction_table where (length(trim(softCreditRecipientAccountLinkingId))>0 and solicatorId is null);
+
+#162) softCreditRecipientAccountLinkingId name is different with softCreditRecipientName
+INSERT INTO smoke_test_report_for_template (errorMsg,passFlag,errorCount,sqlStatement)
+SELECT 'softCreditRecipientAccountLinkingId name is different with softCreditRecipientName',IF(COUNT(*)>0,'Fail','Pass') result,COUNT(*) number,'SELECT z1.* from z_newcreate_template_transaction_table z1, user u where z1.solicatorId=u.userId and length(trim(z1.softCreditRecipientName))>0 and z1.softCreditRecipientName<>CONCAT_WS('' '',u.firstName,u.lastName)'
+from (SELECT z1.* from z_newcreate_template_transaction_table z1, user u where z1.solicatorId=u.userId and length(trim(z1.softCreditRecipientName))>0 and z1.softCreditRecipientName<>CONCAT_WS(' ',u.firstName,u.lastName)) a;
+
+
+#163) softCreditReceiveAmount is negative
+INSERT INTO smoke_test_report_for_template (errorMsg,passFlag,errorCount,sqlStatement)
+SELECT 'softCreditReceiveAmount is negative',IF(COUNT(*)>0,'Fail','Pass') result,COUNT(*) number,'SELECT * from z_newcreate_template_transaction_table where  (length(trim(softCreditReceiveAmount))>0 and softCreditReceiveAmount+0<0)'
+from z_newcreate_template_transaction_table where (length(trim(softCreditReceiveAmount))>0 and softCreditReceiveAmount+0<0);
+
+DROP TABLE IF EXISTS z_newcreate_soft_credit_rpws;
+
+CREATE TABLE z_newcreate_soft_credit_rpws
+SELECT * from z_newcreate_template_transaction_table where length(trim(softCreditRecipientAccountLinkingId))>0 and ((length(trim(softCreditReceiveAmount))>0  and softCreditReceiveAmount+0>0) or length(trim(softCreditReceivePercentage))>0);
+
+UPDATE z_newcreate_soft_credit_rpws z1, z_newcreate_template_transaction_table z2 set z1.transactionId=z2.transactionId, z1.transactionAmount=z2.transactionAmount WHERE z1.parentTransactionLinkingId=z2.transactionLinkingId and z1.parentTransactionLinkingSeq=z2.transactionSeq and z1.parentTransactionLinkingIdSourceTable=z2.transactionLinkingIdSourceTable;
+
+
+#164) softCreditReceiveAmount is>transactionAmount
+INSERT INTO smoke_test_report_for_template (errorMsg,passFlag,errorCount,sqlStatement)
+SELECT 'softCreditReceiveAmount is>transactionAmount',IF(COUNT(*)>0,'Fail','Pass') result,COUNT(*) number,'SELECT * from z_newcreate_soft_credit_rpws where length(trim(transactionAmount))>0 and length(trim(softCreditReceiveAmount))>0 and softCreditReceiveAmount+0>0  and softCreditReceiveAmount+0>transactionAmount+0'
+from z_newcreate_soft_credit_rpws where length(trim(transactionAmount))>0 and length(trim(softCreditReceiveAmount))>0 and softCreditReceiveAmount+0>0  and softCreditReceiveAmount+0>transactionAmount+0;
+
+
+
+#228) softCreditReceiveAmount different with softCreditReceivePercentage
+INSERT INTO smoke_test_report_for_template (errorMsg,passFlag,errorCount,sqlStatement)
+SELECT 'product rows have softCredit',IF(COUNT(*)>0,'Fail','Pass') result,COUNT(*) number,'SELECT * from z_newcreate_soft_credit_rpws where length(trim(transactionAmount))>0 and length(trim(softCreditReceivePercentage))>0 and length(trim(softCreditReceiveAmount))>0 and softCreditReceiveAmount/transactionAmount<>softCreditReceivePercentage'
+from z_newcreate_soft_credit_rpws where length(trim(transactionAmount))>0 and length(trim(softCreditReceivePercentage))>0 and length(trim(softCreditReceiveAmount))>0 and softCreditReceiveAmount/transactionAmount<>softCreditReceivePercentage;
+
+DROP TABLE IF EXISTS z_newcreate_soft_credit_rpws;
+
+
+
+#229) softCreditReceivePercentage>100
+INSERT INTO smoke_test_report_for_template (errorMsg,passFlag,errorCount,sqlStatement)
+SELECT 'softCreditReceivePercentage>100',IF(COUNT(*)>0,'Fail','Pass') result,COUNT(*) number,'SELECT * from z_newcreate_template_transaction_table where length(trim(softCreditReceivePercentage))>0 and softCreditReceivePercentage+0>100'
+from z_newcreate_template_transaction_table where length(trim(softCreditReceivePercentage))>0 and softCreditReceivePercentage+0>100;
+
+#####################################################################
+#####################allocation
+#32) fundname is blank in allocation
+INSERT INTO smoke_test_report_for_template (errorMsg,passFlag,errorCount,sqlStatement)
+SELECT 'fundname is blank in allocation',IF(COUNT(*)>0,'Fail','Pass') result,COUNT(*) number,'SELECT * from z_newcreate_template_allocation where allocationType=''fund'' and allocationName is null'
+from z_newcreate_template_allocation where allocationType='fund' and allocationName is null;
+
+#37) campaignName is blank in allocation
+INSERT INTO smoke_test_report_for_template (errorMsg,passFlag,errorCount,sqlStatement)
+SELECT 'campaignName is blank in allocation',IF(COUNT(*)>0,'Fail','Pass') result,COUNT(*) number,'SELECT * from z_newcreate_template_allocation where allocationType=''campaign'' and allocationName is null'
+from z_newcreate_template_allocation where allocationType='campaign' and allocationName is null;
+
+#42) purposeName is blank in allocation
+
+INSERT INTO smoke_test_report_for_template (errorMsg,passFlag,errorCount,sqlStatement)
+SELECT 'purposeName is blank in allocation',IF(COUNT(*)>0,'Fail','Pass') result,COUNT(*) number,'SELECT * from z_newcreate_template_allocation where allocationType=''purpose'' and allocationName is null'
+from z_newcreate_template_allocation where allocationType='purpose' and allocationName is null;
+
+#47) sourceName is blank in allocation
+INSERT INTO smoke_test_report_for_template (errorMsg,passFlag,errorCount,sqlStatement)
+SELECT 'sourceName is blank in allocation',IF(COUNT(*)>0,'Fail','Pass') result,COUNT(*) number,'SELECT * from z_newcreate_template_allocation where allocationType=''source'' and allocationName is null'
+from z_newcreate_template_allocation where allocationType='source' and allocationName is null;
+
+
+#165) allocationLinkingId same but allocationName different
+INSERT INTO smoke_test_report_for_template (errorMsg,passFlag,errorCount,sqlStatement)
+SELECT 'multiple allocationName with same allocationLinkingId and type',IF(COUNT(*)>0,'Fail','Pass') result,COUNT(*) number,'SELECT * from z_newcreate_template_allocation where length(trim(allocationLinkingId))>0 and length(trim(allocationName))>0 GROUP BY allocationLinkingId,allocationType HAVING count(DISTINCT allocationName)>1'
+from (SELECT * from z_newcreate_template_allocation where length(trim(allocationLinkingId))>0 and length(trim(allocationName))>0 GROUP BY allocationLinkingId,allocationType HAVING count(DISTINCT allocationName)>1) a;
+
+#166) allocationLinkingId is blank
+INSERT INTO smoke_test_report_for_template (errorMsg,passFlag,errorCount,sqlStatement)
+SELECT 'allocationLinkingId is blank',IF(COUNT(*)>0,'Fail','Pass') result,COUNT(*) number,'SELECT * from  z_newcreate_template_allocation where allocationLinkingId is NULL'
+from  z_newcreate_template_allocation where allocationLinkingId is NULL;
+
+#167) allocationLinkingId same but allocationCode different
+INSERT INTO smoke_test_report_for_template (errorMsg,passFlag,errorCount,sqlStatement)
+SELECT 'multiple allocationCode with same allocationLinkingId and type',IF(COUNT(*)>0,'Fail','Pass') result,COUNT(*) number,'SELECT * from z_newcreate_template_allocation where length(trim(allocationLinkingId))>0 and length(trim(allocationCode))>0 GROUP BY allocationLinkingId,allocationType HAVING count(DISTINCT allocationCode)>1'
+from (SELECT * from z_newcreate_template_allocation where length(trim(allocationLinkingId))>0 and length(trim(allocationCode))>0 GROUP BY allocationLinkingId,allocationType HAVING count(DISTINCT allocationCode)>1) a;
+
+
+#168) allocationStatus can not identify
+INSERT INTO smoke_test_report_for_template (errorMsg,passFlag,errorCount,sqlStatement)
+SELECT 'allocationStatus can not identify',IF(COUNT(*)>0,'Fail','Pass') result,COUNT(*) number,'SELECT * from z_newcreate_template_allocation where length(trim(allocationStatus))>0 and allocationStatus not in (''active'',''Inactive'',''Yes'',''No'',''Y'',''N'',''1'',''2'')'
+from  z_newcreate_template_allocation where length(trim(allocationStatus))>0 and allocationStatus not in ('active','Inactive','Yes','No','Y','N','1','2');
+
+
+#169) parentAllocationLinkingId is invalid or not campaign
+INSERT INTO smoke_test_report_for_template (errorMsg,passFlag,errorCount,sqlStatement)
+SELECT 'parentAllocationLinkingId is invalid or not campaign',IF(COUNT(*)>0,'Fail','Pass') result,COUNT(*) number,'SELECT * from  z_newcreate_template_allocation z1 left join z_newcreate_template_allocation z2 on z1.parentAllocationLinkingId=z2.allocationLinkingId and z2.allocationType=''campaign'' and length(trim(z1.parentAllocationLinkingId))>0 and z1.allocationType=''campaign'' where  z1. parentAllocationLinkingId is not null and z2.allocationLinkingId is null'
+from  z_newcreate_template_allocation z1 left join z_newcreate_template_allocation z2 on z1.parentAllocationLinkingId=z2.allocationLinkingId and z2.allocationType='campaign' and length(trim(z1.parentAllocationLinkingId))>0 and z1.allocationType='campaign' where z1. parentAllocationLinkingId is not null and z2.allocationLinkingId is null;
+
+
+#170) parentAllocationLinkingId or parentAllocationName is polulated on fund,purpose,source rows
+INSERT INTO smoke_test_report_for_template (errorMsg,passFlag,errorCount,sqlStatement)
+SELECT 'parentAllocationLinkingId or parentAllocationName is polulated on fund,purpose,source rows',IF(COUNT(*)>0,'Fail','Pass') result,COUNT(*) number,'SELECT * from  z_newcreate_template_allocation where (length(trim(parentAllocationLinkingId))>0 or length(trim(parentAllocationName))>0) and allocationType<>''campaign'''
+from  z_newcreate_template_allocation where (length(trim(parentAllocationLinkingId))>0 or length(trim(parentAllocationName))>0) and allocationType<>'campaign';
+
+
+
+
+#171) 同一个campaign 有不同的 parentCampaign
+INSERT INTO smoke_test_report_for_template (errorMsg,passFlag,errorCount,sqlStatement)
+SELECT 'one Campaign have multiple parentCampaign',IF(COUNT(*)>0,'Fail','Pass') result,COUNT(*) number,'SELECT * from  z_newcreate_template_allocation where length(trim(parentCampaignId))>0 and length(trim(campaignId))>0 GROUP BY campaignId HAVING count(DISTINCT parentCampaignId)>1'
+from (SELECT * from  z_newcreate_template_allocation where length(trim(parentCampaignId))>0 and length(trim(campaignId))>0 GROUP BY campaignId HAVING count(DISTINCT parentCampaignId)>1) a;
+
+#172) 同一个campaign 有不同的 fund
+INSERT INTO smoke_test_report_for_template (errorMsg,passFlag,errorCount,sqlStatement)
+SELECT 'one campaign have multiple fund',IF(COUNT(*)>0,'Fail','Pass') result,COUNT(*) number,'SELECT * from  z_newcreate_template_allocation where length(trim(fundId))>0 and length(trim(campaignId))>0 GROUP BY campaignId HAVING count(DISTINCT fundId)>1'
+from (SELECT * from  z_newcreate_template_allocation where length(trim(fundId))>0 and length(trim(campaignId))>0 GROUP BY campaignId HAVING count(DISTINCT fundId)>1) a;
+
+#173) 同一个campaign 有不同的 purpose
+INSERT INTO smoke_test_report_for_template (errorMsg,passFlag,errorCount,sqlStatement)
+SELECT 'one campaign have multiple purpose',IF(COUNT(*)>0,'Fail','Pass') result,COUNT(*) number,'SELECT * from  z_newcreate_template_allocation where length(trim(purposeId))>0 and length(trim(campaignId))>0 GROUP BY campaignId HAVING count(DISTINCT purposeId)>1'
+from (SELECT * from  z_newcreate_template_allocation where length(trim(purposeId))>0 and length(trim(campaignId))>0 GROUP BY campaignId HAVING count(DISTINCT purposeId)>1) a;
+
+#174) 同一个campaign 有不同的 campaignGoal
+INSERT INTO smoke_test_report_for_template (errorMsg,passFlag,errorCount,sqlStatement)
+SELECT 'one campaign have multiple campaignGoal',IF(COUNT(*)>0,'Fail','Pass') result,COUNT(*) number,'SELECT * from  z_newcreate_template_allocation where length(trim(campaignGoal))>0 and length(trim(campaignId))>0 GROUP BY campaignId HAVING count(DISTINCT campaignGoal)>1'
+from (SELECT * from  z_newcreate_template_allocation where length(trim(campaignGoal))>0 and length(trim(campaignId))>0 GROUP BY campaignId HAVING count(DISTINCT campaignGoal)>1) a;
+
+
+#175) purpose 有不同的 fund
+/*
+INSERT INTO smoke_test_report_for_template (errorMsg,passFlag,errorCount,sqlStatement)
+SELECT 'one purpose have multiple fund',IF(COUNT(*)>0,'Fail','Pass') result,COUNT(*) number,'SELECT * from  z_newcreate_template_allocation where length(trim(fundId))>0 and length(trim(purposeId))>0 GROUP BY purposeId HAVING count(DISTINCT fundId)>1'
+from (SELECT * from  z_newcreate_template_allocation where length(trim(fundId))>0 and length(trim(purposeId))>0 GROUP BY purposeId HAVING count(DISTINCT fundId)>1) a;
+*/
+
+
+#176) purposeLinkingId is invalid or not purpose
+INSERT INTO smoke_test_report_for_template (errorMsg,passFlag,errorCount,sqlStatement)
+SELECT 'purposeLinkingId is invalid or not purpose',IF(COUNT(*)>0,'Fail','Pass') result,COUNT(*) number,'SELECT * from  z_newcreate_template_allocation z1 left join z_newcreate_template_allocation z2 on z1.purposeLinkingId=z2.allocationLinkingId and z2.allocationType=''purpose'' and length(trim(z1.purposeLinkingId))>0 and z1.allocationType=''campaign'' where z1.purposeLinkingId is not null and z2.allocationLinkingId is null'
+from  z_newcreate_template_allocation z1 left join z_newcreate_template_allocation z2 on z1.purposeLinkingId=z2.allocationLinkingId and z2.allocationType='purpose' and length(trim(z1.purposeLinkingId))>0 and z1.allocationType='campaign' where z1.purposeLinkingId is not null and z2.allocationLinkingId is null;
+
+
+#177) purposeLinkingId or purposeLinkingName is polulated on fund,purpose,source rows
+INSERT INTO smoke_test_report_for_template (errorMsg,passFlag,errorCount,sqlStatement)
+SELECT 'purposeLinkingId or purposeLinkingName is polulated on fund,purpose,source rows',IF(COUNT(*)>0,'Fail','Pass') result,COUNT(*) number,'SELECT * from  z_newcreate_template_allocation where (length(trim(purposeLinkingId))>0 or length(trim(purposeLinkingName))>0) and allocationType<>''campaign'''
+from  z_newcreate_template_allocation where (length(trim(purposeLinkingId))>0 or length(trim(purposeLinkingName))>0) and allocationType<>'campaign';
+
+
+#178) fundLinkingId is invalid or not fund
+INSERT INTO smoke_test_report_for_template  (errorMsg,passFlag,errorCount,sqlStatement)
+SELECT 'fundLinkingId is invalid or not fund',IF(COUNT(*)>0,'Fail','Pass') result,COUNT(*) number,'SELECT * from  z_newcreate_template_allocation z1 left join z_newcreate_template_allocation z2 on z1.fundLinkingId=z2.allocationLinkingId and z2.allocationType=''fund'' and length(trim(z1.fundLinkingId))>0 and z1.allocationType in(''campain'',''purpose'') where  z1. fundLinkingId is not null and  z2.allocationLinkingId is null'
+from (SELECT z1.* from z_newcreate_template_allocation z1 left join z_newcreate_template_allocation z2 on z1.fundLinkingId=z2.allocationLinkingId and z2.allocationType='fund' and length(trim(z1.fundLinkingId))>0 and z1.allocationType in('campain','purpose') where z1. fundLinkingId is not null and z2.allocationLinkingId is null)a ;
+
+
+#179) fundLinkingId or fundLinkingName is polulated on fund,source,purpose rows
+INSERT INTO smoke_test_report_for_template (errorMsg,passFlag,errorCount,sqlStatement)
+SELECT 'fundLinkingId or fundLinkingName is polulated on fund,source rows',IF(COUNT(*)>0,'Fail','Pass') result,COUNT(*) number,'SELECT * from  z_newcreate_template_allocation where (length(trim(fundLinkingId))>0 or length(trim(fundLinkingName))>0) and allocationType not in (''campaign'')'
+from  z_newcreate_template_allocation where (length(trim(fundLinkingId))>0 or length(trim(fundLinkingName))>0) and allocationType not in ('campaign');
+
+
+#180) campaign start date >end date
+INSERT INTO smoke_test_report_for_template (errorMsg,passFlag,errorCount,sqlStatement)
+SELECT 'campaign start date is later than end date ',IF(COUNT(*)>0,'Fail','Pass') result,COUNT(*) number,'SELECT * from  z_newcreate_template_allocation where (length(trim(allocationStartDate))>0 and length(trim(allocationEndDate))>0) and allocationStartDate>allocationEndDate'
+from  z_newcreate_template_allocation where (length(trim(allocationStartDate))>0 and length(trim(allocationEndDate))>0) and allocationStartDate>allocationEndDate;
+
+#181) endDate in fund, purpose or source rows is populated
+INSERT INTO smoke_test_report_for_template (errorMsg,passFlag,errorCount,sqlStatement)
+SELECT 'endDate in fund, purpose or source rows is populated',IF(COUNT(*)>0,'Fail','Pass') result,COUNT(*) number,'SELECT * from  z_newcreate_template_allocation where length(trim(allocationEndDate))>0 and allocationType in(''fund'',''purpose'',''source'')'
+from  z_newcreate_template_allocation where length(trim(allocationEndDate))>0 and allocationType in('fund','purpose','source');
+
+#182) startDate in source rows is populated
+INSERT INTO smoke_test_report_for_template (errorMsg,passFlag,errorCount,sqlStatement)
+SELECT 'allocationStartDate in source rows is populated',IF(COUNT(*)>0,'Fail','Pass') result,COUNT(*) number,'SELECT * from z_newcreate_template_allocation where length(trim(allocationStartDate))>0 and allocationType in(''source'')'
+from  z_newcreate_template_allocation where length(trim(allocationStartDate))>0 and allocationType in('source');
+
+
+#183) campaignGoal is populated in fund,purpose,source rows
+INSERT INTO smoke_test_report_for_template (errorMsg,passFlag,errorCount,sqlStatement)
+SELECT 'campaignGoal is populated in fund,purpose,source rows',IF(COUNT(*)>0,'Fail','Pass') result,COUNT(*) number,'SELECT * from  z_newcreate_template_allocation where length(trim(campaignGoal))>0 and allocationType in(''fund'',''purpose'',''source'')'
+from  z_newcreate_template_allocation where length(trim(campaignGoal))>0 and allocationType in('fund','purpose','source');
+
+#220) campaign have multiple startdate
+INSERT INTO smoke_test_report_for_template (errorMsg,passFlag,errorCount,sqlStatement)
+SELECT 'campaign have multiple startdate,enddate',IF(COUNT(*)>0,'Fail','Pass') result,COUNT(*) number,'SELECT * from  z_newcreate_template_allocation where length(trim(allocationStartDate))>0 and length(trim(campaignId))>0 GROUP BY campaignId HAVING count(DISTINCT allocationStartDate)>1'
+from (SELECT * from  z_newcreate_template_allocation where length(trim(allocationStartDate))>0 and length(trim(campaignId))>0 GROUP BY campaignId HAVING count(DISTINCT allocationStartDate)>1) a;
+
+#221) campaign have multiple enddate
+INSERT INTO smoke_test_report_for_template (errorMsg,passFlag,errorCount,sqlStatement)
+SELECT 'campaign have multiple enddate',IF(COUNT(*)>0,'Fail','Pass') result,COUNT(*) number,'SELECT * from  z_newcreate_template_allocation where length(trim(allocationEndDate))>0 and length(trim(campaignId))>0 GROUP BY campaignId HAVING count(DISTINCT allocationEndDate)>1'
+from (SELECT * from  z_newcreate_template_allocation where length(trim(allocationEndDate))>0 and length(trim(campaignId))>0 GROUP BY campaignId HAVING count(DISTINCT allocationEndDate)>1) a;
+
+
+#222) fund have multiple startdate
+INSERT INTO smoke_test_report_for_template (errorMsg,passFlag,errorCount,sqlStatement)
+SELECT 'fund have multiple startdate',IF(COUNT(*)>0,'Fail','Pass') result,COUNT(*) number,'SELECT * from  z_newcreate_template_allocation where length(trim(allocationStartDate))>0 and length(trim(fundId))>0 GROUP BY fundId HAVING count(DISTINCT allocationStartDate)>1'
+from (SELECT * from  z_newcreate_template_allocation where length(trim(allocationStartDate))>0 and length(trim(fundId))>0 GROUP BY fundId HAVING count(DISTINCT allocationStartDate)>1) a;
+
+#223) purpose have multiple startdate
+INSERT INTO smoke_test_report_for_template (errorMsg,passFlag,errorCount,sqlStatement)
+SELECT 'purpose have multiple startdate',IF(COUNT(*)>0,'Fail','Pass') result,COUNT(*) number,'SELECT * from  z_newcreate_template_allocation where length(trim(allocationStartDate))>0 and length(trim(purposeId))>0 GROUP BY purposeId HAVING count(DISTINCT allocationStartDate)>1'
+from (SELECT * from  z_newcreate_template_allocation where length(trim(allocationStartDate))>0 and length(trim(purposeId))>0 GROUP BY purposeId HAVING count(DISTINCT allocationStartDate)>1) a;
+
+
+#224) campaign and parent campaign xiangtong
+INSERT INTO smoke_test_report_for_template (errorMsg,passFlag,errorCount,sqlStatement)
+SELECT 'campaign is same as parent campaign',IF(COUNT(*)>0,'Fail','Pass') result,COUNT(*) number,'SELECT * from z_newcreate_template_allocation where length(trim(campaignId))>0 and length(trim(parentCampaignId))>0 and campaignId=parentCampaignId'
+from z_newcreate_template_allocation where length(trim(campaignId))>0 and length(trim(parentCampaignId))>0 and campaignId=parentCampaignId;
+
+########################################################
+
+#################################################Evevt lookup table
+#184) eventLinkingId is blank
+/*
+INSERT INTO smoke_test_report_for_template (errorMsg,passFlag,errorCount,sqlStatement)
+SELECT 'eventLinkingId is blank',IF(COUNT(*)>0,'Fail','Pass') result,COUNT(*) number,'SELECT * from  z_newcreate_template_event where eventLinkingId is null and masterRecord=1'
+from  z_newcreate_template_event where eventLinkingId is null and masterRecord=1;
+*/
+#185) eventName is blank
+INSERT INTO smoke_test_report_for_template (errorMsg,passFlag,errorCount,sqlStatement)
+SELECT 'eventName is blank',IF(COUNT(*)>0,'Fail','Pass') result,COUNT(*) number,'SELECT * from  z_newcreate_template_event where eventName is null and masterRecord=1'
+from  z_newcreate_template_event where eventName is null and masterRecord=1;
+
+#186) eventStartDate or eventEndDate is blank
+INSERT INTO smoke_test_report_for_template (errorMsg,passFlag,errorCount,sqlStatement)
+SELECT 'eventStartDate or eventEndDate is blank',IF(COUNT(*)>0,'Fail','Pass') result,COUNT(*) number,'SELECT * from  z_newcreate_template_event where (eventStartDate is null or eventEndDate is null) and masterRecord=1'
+from  z_newcreate_template_event where (eventStartDate is null or eventEndDate is null) and masterRecord=1;
+
+#187) eventStartDate> eventEndDate
+INSERT INTO smoke_test_report_for_template (errorMsg,passFlag,errorCount,sqlStatement)
+SELECT 'eventStartDate> eventEndDate',IF(COUNT(*)>0,'Fail','Pass') result,COUNT(*) number,'SELECT * from  z_newcreate_template_event where length(trim(eventStartDate))>0 and length(trim(eventEndDate))>0 and eventStartDate>eventEndDate and masterRecord=1'
+from  z_newcreate_template_event where length(trim(eventStartDate))>0 and length(trim(eventEndDate))>0 and eventStartDate>eventEndDate and masterRecord=1;
+
+
+#188) multiple event share same eventLinkingId
+INSERT INTO smoke_test_report_for_template (errorMsg,passFlag,errorCount,sqlStatement)
+SELECT 'multiple event share same eventLinkingId',IF(COUNT(*)>0,'Fail','Pass') result,COUNT(*) number,'SELECT * from  z_newcreate_template_event where length(trim(eventLinkingId))>0 and length(trim(eventId))>0 and masterRecord=1 GROUP BY eventLinkingId HAVING count(DISTINCT eventId)>1'
+ from (SELECT * from  z_newcreate_template_event where length(trim(eventLinkingId))>0 and length(trim(eventId))>0 and masterRecord=1 GROUP BY eventLinkingId HAVING count(DISTINCT eventId)>1) a;
+
+
+#189) multiple eventCode share same event
+INSERT INTO smoke_test_report_for_template (errorMsg,passFlag,errorCount,sqlStatement)
+SELECT 'multiple eventCode share same event',IF(COUNT(*)>0,'Fail','Pass') result,COUNT(*) number,'SELECT * from  z_newcreate_template_event where length(trim(eventCode))>0 and length(trim(eventId))>0 and masterRecord=1 GROUP BY eventId HAVING count(DISTINCT eventCode)>1'
+ from (SELECT * from  z_newcreate_template_event where length(trim(eventCode))>0 and length(trim(eventId))>0 and masterRecord=1 GROUP BY eventId HAVING count(DISTINCT eventCode)>1) a;
+
+#190) multiple eventCategoryName share same event
+INSERT INTO smoke_test_report_for_template (errorMsg,passFlag,errorCount,sqlStatement)
+SELECT 'multiple eventCategoryName share same event',IF(COUNT(*)>0,'Fail','Pass') result,COUNT(*) number,'SELECT * from  z_newcreate_template_event where length(trim(eventCategoryName))>0 and length(trim(eventId))>0 and masterRecord=1 GROUP BY eventName,eventStartDate,eventEndDate HAVING count(DISTINCT eventCategoryName)>1'
+ from (SELECT * from  z_newcreate_template_event where length(trim(eventCategoryName))>0 and length(trim(eventId))>0 and masterRecord=1 GROUP BY eventName,eventStartDate,eventEndDate HAVING count(DISTINCT eventCategoryName)>1) a;
+
+#191) multiple eventTopicName share same event
+INSERT INTO smoke_test_report_for_template (errorMsg,passFlag,errorCount,sqlStatement)
+SELECT 'multiple eventTopicName share same event',IF(COUNT(*)>0,'Fail','Pass') result,COUNT(*) number,'SELECT * from  z_newcreate_template_event where length(trim(eventTopicName))>0 and length(trim(eventId))>0 and masterRecord=1 GROUP BY eventId HAVING count(DISTINCT eventTopicName)>1'
+ from (SELECT * from  z_newcreate_template_event where length(trim(eventTopicName))>0 and length(trim(eventId))>0 and masterRecord=1 GROUP BY eventId HAVING count(DISTINCT eventTopicName)>1) a;
+
+#163) multiple eventDescription share same event
+/*
+INSERT INTO smoke_test_report_for_template (errorMsg,passFlag,errorCount,sqlStatement)
+SELECT 'multiple eventDescription share same event',IF(COUNT(*)>0,'Fail','Pass') result,COUNT(*) number,'SELECT * from  z_newcreate_template_event where length(trim(eventDescription))>0 and length(trim(eventId))>0 and masterRecord=1 GROUP BY eventId HAVING count(DISTINCT eventDescription)>1'
+ from (SELECT * from  z_newcreate_template_event where length(trim(eventDescription))>0 and length(trim(eventId))>0 and masterRecord=1 GROUP BY eventId HAVING count(DISTINCT eventDescription)>1) a;
+*/
+
+#192) multiple eventStartTime share same event
+INSERT INTO smoke_test_report_for_template (errorMsg,passFlag,errorCount,sqlStatement)
+SELECT 'multiple eventStartTime share same event',IF(COUNT(*)>0,'Fail','Pass') result,COUNT(*) number,'SELECT * from  z_newcreate_template_event where length(trim(eventStartTime))>0 and length(trim(eventId))>0 and masterRecord=1 GROUP BY eventId HAVING count(DISTINCT eventStartTime)>1'
+ from (SELECT * from  z_newcreate_template_event where length(trim(eventStartTime))>0 and length(trim(eventId))>0 and masterRecord=1 GROUP BY eventId HAVING count(DISTINCT eventStartTime)>1) a;
+
+#193) multiple eventEndTime share same event
+INSERT INTO smoke_test_report_for_template (errorMsg,passFlag,errorCount,sqlStatement)
+SELECT 'multiple eventEndTime share same event',IF(COUNT(*)>0,'Fail','Pass') result,COUNT(*) number,'SELECT * from  z_newcreate_template_event where length(trim(eventEndTime))>0 and length(trim(eventId))>0 and masterRecord=1 GROUP BY eventId HAVING count(DISTINCT eventEndTime)>1'
+ from (SELECT * from  z_newcreate_template_event where length(trim(eventEndTime))>0 and length(trim(eventId))>0 and masterRecord=1 GROUP BY eventId HAVING count(DISTINCT eventEndTime)>1) a;
+
+#194) multiple eventLocation share same event
+INSERT INTO smoke_test_report_for_template (errorMsg,passFlag,errorCount,sqlStatement)
+SELECT 'multiple eventLocation share same event',IF(COUNT(*)>0,'Fail','Pass') result,COUNT(*) number,'SELECT * from  z_newcreate_template_event where (length(trim(eventLocation))>0 or length(trim(eventRoomNumber))>0 or length(trim(eventBuildingNumber))>0 or length(trim(eventAddress))>0 or length(trim(eventCity))>0 or length(trim(eventStateProvince))>0 or length(trim(eventZip))>0 or length(trim(eventCountry))>0)  and length(trim(eventId))>0 and masterRecord=1 GROUP BY eventId HAVING count(DISTINCT CONCAT(eventLocation,eventRoomNumber,eventBuildingNumber,eventAddress,eventCity,eventStateProvince,eventZip,eventCountry))>1'
+ from (SELECT * from  z_newcreate_template_event where (length(trim(eventLocation))>0 or length(trim(eventRoomNumber))>0 or length(trim(eventBuildingNumber))>0 or length(trim(eventAddress))>0 or length(trim(eventCity))>0 or length(trim(eventStateProvince))>0 or length(trim(eventZip))>0 or length(trim(eventCountry))>0)  and length(trim(eventId))>0 and masterRecord=1 GROUP BY eventId HAVING count(DISTINCT CONCAT(eventLocation,eventRoomNumber,eventBuildingNumber,eventAddress,eventCity,eventStateProvince,eventZip,eventCountry))>1) a;
+
+#195) multiple eventVirtualMeetingURL share same event
+INSERT INTO smoke_test_report_for_template (errorMsg,passFlag,errorCount,sqlStatement)
+SELECT 'multiple eventVirtualMeetingURL share same event',IF(COUNT(*)>0,'Fail','Pass') result,COUNT(*) number,'SELECT * from  z_newcreate_template_event where length(trim(eventVirtualMeetingURL))>0 and length(trim(eventId))>0 and masterRecord=1 GROUP BY eventId HAVING count(DISTINCT eventVirtualMeetingURL)>1'
+ from (SELECT * from  z_newcreate_template_event where length(trim(eventVirtualMeetingURL))>0 and length(trim(eventId))>0 and masterRecord=1 GROUP BY eventId HAVING count(DISTINCT eventVirtualMeetingURL)>1) a;
+
+#196) multiple registrationCloseDate share same event
+INSERT INTO smoke_test_report_for_template (errorMsg,passFlag,errorCount,sqlStatement)
+SELECT 'multiple registrationCloseDate share same event',IF(COUNT(*)>0,'Fail','Pass') result,COUNT(*) number,'SELECT * from  z_newcreate_template_event where length(trim(registrationCloseDate))>0 and length(trim(eventId))>0 and masterRecord=1 GROUP BY eventId HAVING count(DISTINCT registrationCloseDate)>1'
+ from (SELECT * from  z_newcreate_template_event where length(trim(registrationCloseDate))>0 and length(trim(eventId))>0 and masterRecord=1 GROUP BY eventId HAVING count(DISTINCT registrationCloseDate)>1) a;
+
+#197) Registration Close Date must be at least one day before the End Date
+INSERT INTO smoke_test_report_for_template (errorMsg,passFlag,errorCount,sqlStatement)
+SELECT 'Registration Close Date must be at least one day before the End Date',IF(COUNT(*)>0,'Fail','Pass') result,COUNT(*) number,'SELECT * from z_newcreate_template_event where length(trim(registrationCloseDate))>0 and length(trim(eventEndDate))>0 and DATE_ADD(registrationCloseDate,INTERVAL 1 DAY)>eventEndDate and masterRecord=1'
+ from z_newcreate_template_event where length(trim(registrationCloseDate))>0 and length(trim(eventEndDate))>0 and DATE_ADD(registrationCloseDate,INTERVAL 1 DAY)>eventEndDate and masterRecord=1;
+
+#198) same eventSessionName with multiple eventSessionFee
+INSERT INTO smoke_test_report_for_template (errorMsg,passFlag,errorCount,sqlStatement)
+SELECT 'same eventSessionName with multiple eventSessionFee',IF(COUNT(*)>0,'Fail','Pass') result,COUNT(*) number,'SELECT * from  z_newcreate_template_event where length(trim(eventSessionName))>0 and length(trim(eventSessionFee))>0 and length(trim(eventId))>0 GROUP BY eventId,eventSessionName HAVING count(DISTINCT eventSessionFee)>1'
+ from (SELECT * from  z_newcreate_template_event where length(trim(eventSessionName))>0 and length(trim(eventSessionFee))>0 and length(trim(eventId))>0 GROUP BY eventId,eventSessionName HAVING count(DISTINCT eventSessionFee)>1) a;
+
+#199) same eventTicketName with multiple eventTicketPrice
+INSERT INTO smoke_test_report_for_template (errorMsg,passFlag,errorCount,sqlStatement)
+SELECT 'same eventTicketName with multiple eventTicketPrice',IF(COUNT(*)>0,'Fail','Pass') result,COUNT(*) number,'SELECT * from  z_newcreate_template_event where length(trim(eventTicketName))>0 and length(trim(eventTicketPrice))>0 and length(trim(eventId))>0 GROUP BY eventId,eventTicketName HAVING count(DISTINCT eventTicketPrice)>1'
+ from (SELECT * from  z_newcreate_template_event where length(trim(eventTicketName))>0 and length(trim(eventTicketPrice))>0 and length(trim(eventId))>0 GROUP BY eventId,eventTicketName HAVING count(DISTINCT eventTicketPrice)>1) a;
+
+#231) eventTicketPrice is negative
+INSERT INTO smoke_test_report_for_template (errorMsg,passFlag,errorCount,sqlStatement)
+SELECT 'eventTicketPrice is negative',IF(COUNT(*)>0,'Fail','Pass') result,COUNT(*) number,'SELECT * from z_newcreate_template_event where length(trim(eventTicketPrice))>0 and eventTicketPrice+0<0'
+ from   z_newcreate_template_event where length(trim(eventTicketPrice))>0 and eventTicketPrice+0<0;
+
+#####################################################################product
+#200) productLinkingId is null
+
+/*
+INSERT INTO smoke_test_report_for_template (errorMsg,passFlag,errorCount,sqlStatement)
+SELECT 'productLinkingId is null',IF(COUNT(*)>0,'Fail','Pass') result,COUNT(*) number,'SELECT * from z_newcreate_template_product where productLinkingId is null and masterRecord=1'
+from z_newcreate_template_product where productLinkingId is null and masterRecord=1;
+*/
+
+#201) productName is null
+INSERT INTO smoke_test_report_for_template (errorMsg,passFlag,errorCount,sqlStatement)
+SELECT 'productName is null',IF(COUNT(*)>0,'Fail','Pass') result,COUNT(*) number,'SELECT * from z_newcreate_template_product where productName is null and masterRecord=1'
+from z_newcreate_template_product where productName is null and masterRecord=1;
+
+#202) one productLinkingId with multiple productName
+INSERT INTO smoke_test_report_for_template (errorMsg,passFlag,errorCount,sqlStatement)
+SELECT 'one product with multiple productCode',IF(COUNT(*)>0,'Fail','Pass') result,COUNT(*) number,'SELECT * from z_newcreate_template_product where  length(trim(productLinkingId))>0 and length(trim(productName))>0 and masterRecord=1 GROUP BY productLinkingId HAVING count(DISTINCT productName)>1'
+from (SELECT * from z_newcreate_template_product where  length(trim(productLinkingId))>0 and length(trim(productName))>0  and masterRecord=1 GROUP BY productLinkingId HAVING count(DISTINCT productName)>1) a;
+
+
+#203) one product with multiple productCode
+INSERT INTO smoke_test_report_for_template (errorMsg,passFlag,errorCount,sqlStatement)
+SELECT 'one product with multiple productCode',IF(COUNT(*)>0,'Fail','Pass') result,COUNT(*) number,'SELECT * from z_newcreate_template_product where  length(trim(productCode))>0 and length(trim(productName))>0 and masterRecord=1 GROUP BY productName HAVING count(DISTINCT productCode)>1'
+from (SELECT * from z_newcreate_template_product where  length(trim(productCode))>0 and length(trim(productName))>0 and masterRecord=1 GROUP BY productName HAVING count(DISTINCT productCode)>1) a;
+
+#204) one product with multiple productBasePrice
+INSERT INTO smoke_test_report_for_template (errorMsg,passFlag,errorCount,sqlStatement)
+SELECT 'one product with multiple productBasePrice',IF(COUNT(*)>0,'Fail','Pass') result,COUNT(*) number,'SELECT * from z_newcreate_template_product where  length(trim(productBasePrice))>0 and length(trim(productName))>0 and masterRecord=1 GROUP BY productName HAVING count(DISTINCT productBasePrice)>1'
+from (SELECT * from z_newcreate_template_product where  length(trim(productBasePrice))>0 and length(trim(productName))>0 and masterRecord=1 GROUP BY productName HAVING count(DISTINCT productBasePrice)>1) a;
+
+#205) one product with multiple product category
+INSERT INTO smoke_test_report_for_template (errorMsg,passFlag,errorCount,sqlStatement)
+SELECT 'one product with multiple productType(categary)',IF(COUNT(*)>0,'Fail','Pass') result,COUNT(*) number,'SELECT * from z_newcreate_template_product where  length(trim(productType))>0 and length(trim(productName))>0 and masterRecord=1 GROUP BY productName HAVING count(DISTINCT productType)>1'
+from (SELECT * from z_newcreate_template_product where  length(trim(productType))>0 and length(trim(productName))>0 and masterRecord=1 GROUP BY productName HAVING count(DISTINCT productType)>1) a;
+
+#206) one product with multiple product productStatus
+INSERT INTO smoke_test_report_for_template (errorMsg,passFlag,errorCount,sqlStatement)
+SELECT 'one product with multiple productStatus',IF(COUNT(*)>0,'Fail','Pass') result,COUNT(*) number,'SELECT * from z_newcreate_template_product where  length(trim(productStatus))>0 and length(trim(productName))>0 and masterRecord=1 GROUP BY productName HAVING count(DISTINCT productStatus)>1'
+from (SELECT * from z_newcreate_template_product where  length(trim(productStatus))>0 and length(trim(productName))>0 and masterRecord=1 GROUP BY productName HAVING count(DISTINCT productStatus)>1) a;
+
+#207) one product with multiple product productDescription
+INSERT INTO smoke_test_report_for_template (errorMsg,passFlag,errorCount,sqlStatement)
+SELECT 'one product with multiple productDescription',IF(COUNT(*)>0,'Fail','Pass') result,COUNT(*) number,'SELECT * from z_newcreate_template_product where  length(trim(productDescription))>0 and length(trim(productName))>0 and masterRecord=1 GROUP BY productName HAVING count(DISTINCT productDescription)>1'
+from (SELECT * from z_newcreate_template_product where  length(trim(productDescription))>0 and length(trim(productName))>0 and masterRecord=1 GROUP BY productName HAVING count(DISTINCT productDescription)>1) a;
+
+
+#208) productOptionChoiceName of one product large than 3
+INSERT INTO smoke_test_report_for_template (errorMsg,passFlag,errorCount,sqlStatement)
+SELECT 'productOptionChoiceName of one product large than 3',IF(COUNT(*)>0,'Fail','Pass') result,COUNT(*) number,'SELECT * from z_newcreate_template_product where  length(trim(productOptionChoiceName))>0 and length(trim(productId))>0 GROUP BY productId HAVING count(DISTINCT productOptionChoiceName)>3'
+from (SELECT * from z_newcreate_template_product where  length(trim(productOptionChoiceName))>0 and length(trim(productId))>0 GROUP BY productId HAVING count(DISTINCT productOptionChoiceName)>3) a;
+
+
+#232) productOptionChoiceName and productOptionName is not  both populated or both blank
+INSERT INTO smoke_test_report_for_template (errorMsg,passFlag,errorCount,sqlStatement)
+SELECT 'productOptionChoiceName and productOptionName is not  both populated or both blank',IF(COUNT(*)>0,'Fail','Pass') result,COUNT(*) number,'SELECT * from z_newcreate_template_product where  (length(trim(productOptionChoiceName))>0 and productOptionName is null) or (length(trim(productOptionName))>0 and productOptionChoiceName is null)'
+from z_newcreate_template_product where  (length(trim(productOptionChoiceName))>0 and productOptionName is null) or (length(trim(productOptionName))>0 and productOptionChoiceName is null);
+
+
+# 225)productstatus 不是默认值
+INSERT INTO smoke_test_report_for_template (errorMsg,passFlag,errorCount,sqlStatement)
+SELECT 'productOptionChoiceName of one product large than 3',IF(COUNT(*)>0,'Fail','Pass') result,COUNT(*) number,'SELECT * from z_newcreate_template_product WHERE productStatus not in (''1'',''2'',''Yes'',''No'',''Y'',''N'',''Active'',''Inactive'') and masterRecord=1'
+from z_newcreate_template_product WHERE productStatus not in ('1','2','Yes','No','Y','N','Active','Inactive') and masterRecord=1;
+
+
+############################################membership
+#209) membershipLinkingId is blank
+/*
+INSERT INTO smoke_test_report_for_template (errorMsg,passFlag,errorCount,sqlStatement)
+SELECT 'membershipLinkingId is blank ',IF(COUNT(*)>0,'Fail','Pass') result,COUNT(*) number,'SELECT * from  z_newcreate_template_membership_level where membershipLinkingId is null'
+from  z_newcreate_template_membership_level where membershipLinkingId is null;
+*/
+
+#210) membershipLevel is blank
+INSERT INTO smoke_test_report_for_template (errorMsg,passFlag,errorCount,sqlStatement)
+SELECT 'membershipLevel is blank',IF(COUNT(*)>0,'Fail','Pass') result,COUNT(*) number,'SELECT * from  z_newcreate_template_membership_level where membershipLevel is null'
+from  z_newcreate_template_membership_level where membershipLevel is null;
+
+#211) membershipGroupType must be 0,1,2
+INSERT INTO smoke_test_report_for_template (errorMsg,passFlag,errorCount,sqlStatement)
+SELECT 'membershipGroupType must be 0,1,2',IF(COUNT(*)>0,'Fail','Pass') result,COUNT(*) number,'SELECT * from  z_newcreate_template_membership_level where length(trim(membershipGroupType))>0 and membershipGroupType not in(0,1,2)'
+from  z_newcreate_template_membership_level where length(trim(membershipGroupType))>0 and membershipGroupType not in(0,1,2);
+
+#212) membershipStatus can not Identified
+INSERT INTO smoke_test_report_for_template (errorMsg,passFlag,errorCount,sqlStatement)
+SELECT 'membershipStatus can not Identified',IF(COUNT(*)>0,'Fail','Pass') result,COUNT(*) number,'SELECT * from z_newcreate_template_membership_level where length(trim(membershipGroupType))>0 and membershipStatus not in(''active'',''Inactive'',''Yes'',''No'',''Y'',''N'',''1'',''2'')'
+from  z_newcreate_template_membership_level where length(trim(membershipGroupType))>0 and membershipStatus not in('active','Inactive','Yes','No','Y','N','1','2');
+
+#213) one membershipLinkingId with multiple membershipLevel
+INSERT INTO smoke_test_report_for_template (errorMsg,passFlag,errorCount,sqlStatement)
+SELECT 'one membershipLinkingId with multiple membershipLevel',IF(COUNT(*)>0,'Fail','Pass') result,COUNT(*) number,'SELECT * from z_newcreate_template_membership_level where length(trim(membershipLinkingId))>0 and length(trim(membershipLevel))>0 GROUP BY membershipLinkingId,membershipGroupType HAVING count(DISTINCT membershipLevel)>1'
+from (SELECT * from z_newcreate_template_membership_level where length(trim(membershipLinkingId))>0 and length(trim(membershipLevel))>0 GROUP BY membershipLinkingId,membershipGroupType HAVING count(DISTINCT membershipLevel)>1) a;
+
+#214) membershipLevel contain life but membershipTermUnit is not 'Life'
+INSERT INTO smoke_test_report_for_template (errorMsg,passFlag,errorCount,sqlStatement)
+SELECT 'membershipLevel contain life but membershipTermUnit is not Life',IF(COUNT(*)>0,'Fail','Pass') result,COUNT(*) number,'SELECT * from  z_newcreate_template_membership_level where length(trim(membershipTermUnit))>0 and length(trim(membershipLevel))>0 and INSTR(membershipLevel,''life'') and membershipTermUnit<>''4'''
+from  z_newcreate_template_membership_level where length(trim(membershipTermUnit))>0 and length(trim(membershipLevel))>0  and INSTR(membershipLevel,'life') and membershipTermUnit<>'4';
+
+#215) membershipTermcost  is negative
+INSERT INTO smoke_test_report_for_template (errorMsg,passFlag,errorCount,sqlStatement)
+SELECT 'membershipTermcost  is negative',IF(COUNT(*)>0,'Fail','Pass') result,COUNT(*) number,'SELECT * from z_newcreate_template_membership_level where length(trim(membershipTermCost))>0 and membershipTermCost+0<0'
+from  z_newcreate_template_membership_level where length(trim(membershipTermCost))>0 and membershipTermCost+0<0;
+
+#216) parentMembershipLinkingId is invalid
+INSERT INTO smoke_test_report_for_template (errorMsg,passFlag,errorCount,sqlStatement)
+SELECT 'parentMembershipLinkingId is invalid',IF(COUNT(*)>0,'Fail','Pass') result,COUNT(*) number,'SELECT * from z_newcreate_template_membership_level z1 left join z_newcreate_template_membership_level z2 on z1.parentMembershipLinkingId=z2.membershipLinkingId and length(trim(z1.parentMembershipLinkingId))>0 where length(trim(z1.parentMembershipLinkingId))>0 and z2.membershipLinkingId is null'
+from  z_newcreate_template_membership_level z1 left join z_newcreate_template_membership_level z2 on z1.parentMembershipLinkingId=z2.membershipLinkingId and length(trim(z1.parentMembershipLinkingId))>0 where length(trim(z1.parentMembershipLinkingId))>0 and z2.membershipLinkingId is null;
+
+
+
+#217) parent-membership不能为none group的membership
+INSERT INTO smoke_test_report_for_template (errorMsg,passFlag,errorCount,sqlStatement)
+SELECT 'parent-membership can not be none group membership',IF(COUNT(*)>0,'Fail','Pass') result,COUNT(*) number,'SELECT * from z_newcreate_template_membership_level z1 left join z_newcreate_template_membership_level z2 on z1.parentMembershipLinkingId=z2.membershipLinkingId and length(trim(z1.parentMembershipLinkingId))>0 where z2.membershipGroupType=0'
+from  z_newcreate_template_membership_level z1 join z_newcreate_template_membership_level z2 on z1.parentMembershipLinkingId=z2.membershipLinkingId and length(trim(z1.parentMembershipLinkingId))>0 where z2.membershipGroupType=0;
+
+#218) sub membership is group membership
+INSERT INTO smoke_test_report_for_template (errorMsg,passFlag,errorCount,sqlStatement)
+SELECT 'sub membership is group membership',IF(COUNT(*)>0,'Fail','Pass') result,COUNT(*) number,'SELECT * from  z_newcreate_template_membership_level where (length(trim(parentMembershipLevel))>0 or length(trim(parentMembershipLinkingId))>0) and membershipGroupType in(1,2)'
+from  z_newcreate_template_membership_level where (length(trim(parentMembershipLevel))>0 or length(trim(parentMembershipLinkingId))>0)  and membershipGroupType in(1,2);
+
+#219) havesubMembership<>1
+INSERT INTO smoke_test_report_for_template (errorMsg,passFlag,errorCount,sqlStatement)
+SELECT 'havesubMembership<>1',IF(COUNT(*)>0,'Fail','Pass') result,COUNT(*) number,'SELECT * from  z_newcreate_template_membership_level where length(trim(havesubMembership))>0 and havesubMembership<>1'
+from  z_newcreate_template_membership_level where length(trim(havesubMembership))>0 and havesubMembership<>1;
+
+
+#233) membershipTermUnit not normal values
+INSERT INTO smoke_test_report_for_template (errorMsg,passFlag,errorCount,sqlStatement)
+SELECT 'membershipTermUnit not normal values',IF(COUNT(*)>0,'Fail','Pass') result,COUNT(*) number,'SELECT * from z_newcreate_template_transaction_table where length(trim(membershipTermUnit))>0 and membershipTermUnit not in (''Year'',''Month'',''Day'',''Life'',''Week'',''1'',''2'',''3'',''4'',''5'')'
+from z_newcreate_template_membership_level where length(trim(membershipTermUnit))>0 and membershipTermUnit not in ('Year','Month','Day','Life','Week','1','2','3','4','5');
+
+#234) membershipTermDuration is negative
+INSERT INTO smoke_test_report_for_template (errorMsg,passFlag,errorCount,sqlStatement)
+SELECT 'membershipTermDuration is negative',IF(COUNT(*)>0,'Fail','Pass') result,COUNT(*) number,'SELECT * from z_newcreate_template_membership_level where length(trim(membershipTermDuration))>0 and membershipTermDuration+0<0'
+from z_newcreate_template_membership_level where length(trim(membershipTermDuration))>0 and membershipTermDuration+0<0;
+
+###############################################################
+SELECT * FROM smoke_test_report_for_template  WHERE passFlag<>'Pass' ORDER BY passFlag;
